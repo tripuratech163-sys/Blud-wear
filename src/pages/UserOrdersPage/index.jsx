@@ -106,7 +106,7 @@ const UserOrdersPage = () => {
       alert("Order cancelled successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to cancel order: " + err.message);
+      alert("Failed to cancel order. Please try again later or contact support.");
     }
   };
 
@@ -142,7 +142,7 @@ const UserOrdersPage = () => {
       alert("Return request submitted successfully!");
     } catch (err) {
       console.error(err);
-      alert("Failed to submit return request: " + err.message);
+      alert("Failed to submit return request. Please try again later or contact support.");
     }
   };
 

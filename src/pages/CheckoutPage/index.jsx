@@ -49,7 +49,8 @@ const CheckoutPage = () => {
       if (error) throw error;
       setOtpSent(true);
     } catch (err) {
-      setAuthError(err.message || "Failed to send OTP.");
+      console.error("OTP Send Error:", err);
+      setAuthError("Failed to send OTP. Please check your mobile number and try again.");
     }
   };
 
@@ -60,7 +61,8 @@ const CheckoutPage = () => {
       const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' });
       if (error) throw error;
     } catch (err) {
-      setAuthError(err.message || "Invalid OTP.");
+      console.error("OTP Verify Error:", err);
+      setAuthError("Invalid or expired OTP. Please try again.");
     }
   };
 
@@ -124,10 +126,13 @@ const CheckoutPage = () => {
         await saveOrder(paymentMethod, paymentResult.razorpay_payment_id, paymentResult.razorpay_order_id);
       }
     } catch (err) {
+      console.error("Checkout Error:", err);
       if (err.message === 'Payment cancelled by user') {
         setCheckoutError('Payment was cancelled. You can try again.');
+      } else if (err.message === "Please fill all required shipping fields.") {
+        setCheckoutError(err.message);
       } else {
-        setCheckoutError(err.message || "An error occurred while processing your order.");
+        setCheckoutError("An unexpected error occurred while placing your order. Please try again or contact support.");
       }
     } finally {
       setProcessing(false);
