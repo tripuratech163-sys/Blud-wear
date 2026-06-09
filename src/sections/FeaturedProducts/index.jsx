@@ -69,7 +69,7 @@ const FeaturedProducts = () => {
                   {product.tag && (
                     <span className="product-tag">{product.tag}</span>
                   )}
-                  <img src={productImage} alt={product.name} className="product-image" />
+                  <img src={productImage} alt={product.name} className="product-image" loading="lazy" decoding="async" />
                   <div className="product-overlay">
                     <span className="add-to-cart">View Product</span>
                   </div>

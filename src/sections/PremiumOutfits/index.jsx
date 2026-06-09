@@ -22,7 +22,7 @@ const PremiumOutfits = () => {
           {categories.map(cat => {
             const cardContent = (
               <>
-                <img src={cat.image} alt={cat.name} className="outfit-image" />
+                <img src={cat.image} alt={cat.name} className="outfit-image" loading="lazy" decoding="async" />
                 {cat.comingSoon && (
                   <div className="outfit-coming-soon">
                     <span>COMING SOON</span>

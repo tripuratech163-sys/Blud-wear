@@ -23,7 +23,7 @@ const ProductCard = ({ product, colorVariant }) => {
     <Link to={linkUrl} className="col-product-card">
       <div className="col-image-container">
         {product.tag && <span className="col-product-tag">{product.tag}</span>}
-        <img src={image} alt={title} className="col-product-image" />
+        <img src={image} alt={title} className="col-product-image" loading="lazy" decoding="async" />
         <div className="col-product-overlay">
           <span className="col-add-to-cart">View Product</span>
         </div>
