@@ -9,20 +9,36 @@
 export const mensProducts = [
   {
     id: "m1",
-    name: "Crimson Core Hoodie",
+    name: "Black Full Compression",
     price: "$180",
     originalPrice: null,
-    image: "/hoodie.png",
+    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7632.jpg",
+    images: [
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7632.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7642.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7616.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7630.jpg",
+    ],
+    description: "High-waist performance leggings with a sculpted fit, smooth stretch, and a bold BludWear training look.",
     category: "Outerwear",
     gender: "men",
     tag: "BESTSELLER",
   },
   {
     id: "m2",
-    name: "Onyx Performance Jacket",
+    name: "Preminum Blud Tank Black",
     price: "$240",
     originalPrice: null,
-    image: "/jacket.png",
+    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7577.jpg",
+    images: [
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7577.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7551.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7573.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7562.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7592.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7594.jpg",
+
+    ],
     category: "Outerwear",
     gender: "men",
     tag: "NEW",
@@ -75,13 +91,11 @@ export const womensProducts = [
     name: "Phantom Leggings",
     price: "$110",
     originalPrice: "$150",
-    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg",
+    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7497.jpg",
     images: [
       "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg",
-      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg",
-      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg",
-      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg",
-      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7515.jpg",
+      "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7532.jpg",
       "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg",
     ],
     description: "High-waist performance leggings with a sculpted fit, smooth stretch, and a bold BludWear training look.",
@@ -162,20 +176,32 @@ export const getProductImages = (product) => {
 };
 
 export const mergeLocalProductImages = (productsToMerge) =>
-  productsToMerge.map((product) => {
+  productsToMerge.map((product, index) => {
+    const genderProducts = productsToMerge.filter((item) => item.gender === product.gender);
+    const genderIndex = genderProducts.findIndex((item) => item.id === product.id);
+    const localGenderProducts =
+      normalizeProductKey(product.gender) === 'women' ? womensProducts : mensProducts;
+
     const localProduct = allLocalProducts.find(
       (local) =>
         normalizeProductKey(local.name) === normalizeProductKey(product.name) &&
         normalizeProductKey(local.gender) === normalizeProductKey(product.gender)
-    );
+    ) || localGenderProducts[genderIndex] || allLocalProducts[index];
 
     return localProduct
       ? {
-          ...product,
-          image: product.image || localProduct.image,
-          images: product.images || localProduct.images,
-          description: product.description || localProduct.description,
-        }
+        ...product,
+        name: localProduct.name || product.name,
+        price: localProduct.price || product.price,
+        originalPrice: localProduct.originalPrice || product.originalPrice,
+        original_price: product.original_price,
+        image: localProduct.image || product.image,
+        images: localProduct.images || product.images,
+        category: localProduct.category || product.category,
+        gender: localProduct.gender || product.gender,
+        tag: localProduct.tag || product.tag,
+        description: localProduct.description || product.description,
+      }
       : product;
   });
 
@@ -183,10 +209,10 @@ export const mergeLocalProductImages = (productsToMerge) =>
 // Category Grid — "Introducing Premium Outfits Of Life Style"
 // ============================================================
 export const categories = [
-  { id: 1, name: "COMPRESSION", image: "/compression.png" },
-  { id: 2, name: "JOGGERS",     image: "/joggers.png" },
-  { id: 3, name: "T-SHIRT",     image: "/tshirt.png" },
-  { id: 4, name: "SHORTS",      image: "/shorts.png" },
-  { id: 5, name: "LEGGINGS",    image: "/leggings.png" },
+  { id: 1, name: "COMPRESSION", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Black%20Full/DSC_8003.jpg" },
+  { id: 2, name: "JOGGERS", image: "/joggers.png" },
+  { id: 3, name: "T-SHIRT", image: "/tshirt.png" },
+  { id: 4, name: "SHORTS", image: "/shorts.png" },
+  { id: 5, name: "LEGGINGS", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg" },
   { id: 6, name: "ACCESSORIES", image: "/hero.png" },
 ];

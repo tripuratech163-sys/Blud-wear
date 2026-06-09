@@ -1,0 +1,195 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0f0f0f;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #000;
+  border-right: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-brand {
+  padding: 2rem;
+  border-bottom: 1px solid #333;
+}
+
+.admin-brand h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+  background: linear-gradient(90deg, #ff3b30, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.admin-nav {
+  flex: 1;
+  padding: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-nav-link {
+  padding: 1rem 2rem;
+  color: #888;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.admin-nav-link:hover, .admin-nav-link.active {
+  color: #fff;
+  background-color: #1a1a1a;
+  border-left-color: #ff3b30;
+}
+
+.admin-sidebar-footer {
+  padding: 2rem;
+  border-top: 1px solid #333;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.admin-signout-btn, .admin-back-btn {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.admin-signout-btn {
+  background-color: transparent;
+  color: #ff3b30;
+  border: 1px solid #ff3b30;
+}
+
+.admin-signout-btn:hover {
+  background-color: #ff3b30;
+  color: #fff;
+}
+
+.admin-back-btn {
+  background-color: #333;
+  color: #fff;
+  border: none;
+}
+
+.admin-back-btn:hover {
+  background-color: #555;
+}
+
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.admin-header {
+  padding: 2rem;
+  background-color: #000;
+  border-bottom: 1px solid #333;
+}
+
+.admin-header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.admin-content {
+  padding: 2rem;
+  flex: 1;
+}
+
+/* Common Admin UI elements */
+.admin-card {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table th, .admin-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.admin-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+.admin-table th {
+  color: #888;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.admin-btn-primary {
+  background-color: #fff;
+  color: #000;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.admin-btn-primary:hover {
+  opacity: 0.8;
+}
+
+.admin-btn-secondary {
+  background-color: transparent;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-btn-secondary:hover {
+  border-color: #fff;
+}
+
+.admin-btn-danger {
+  background-color: #ff3b30;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.admin-btn-danger:hover {
+  opacity: 0.8;
+}

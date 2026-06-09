@@ -1,5 +1,5 @@
 .brand-story {
-  padding: 10rem 0;
+  padding: 4.5rem 0;
   background-color: var(--color-bg-secondary);
   position: relative;
   overflow: hidden;
@@ -8,25 +8,25 @@
 .story-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6rem;
+  gap: 3.5rem;
   align-items: center;
 }
 
 .story-title {
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  margin-bottom: 2rem;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  margin-bottom: 1.2rem;
   color: var(--color-text-primary);
 }
 
 .story-text {
-  font-size: 1.1rem;
+  font-size: 1rem;
   line-height: 1.8;
   color: var(--color-text-secondary);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .story-text:last-of-type {
-  margin-bottom: 3rem;
+  margin-bottom: 1.75rem;
 }
 
 .story-btn {
@@ -41,7 +41,7 @@
 
 .story-visual {
   position: relative;
-  height: 600px;
+  height: 420px;
 }
 
 .visual-block {
@@ -90,9 +90,9 @@
 @media (max-width: 992px) {
   .story-container {
     grid-template-columns: 1fr;
-    gap: 4rem;
+    gap: 3rem;
   }
   .story-visual {
-    height: 400px;
+    height: 300px;
   }
 }

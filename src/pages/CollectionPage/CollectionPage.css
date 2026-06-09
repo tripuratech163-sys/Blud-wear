@@ -259,6 +259,21 @@
   letter-spacing: 0;
 }
 
+.col-product-price-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.15rem;
+}
+
+.col-product-original-price {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
 .col-product-price {
   font-size: 1rem;
   color: var(--color-blood-light);

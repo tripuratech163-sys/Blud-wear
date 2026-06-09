@@ -5,7 +5,7 @@ const BrandStory = () => {
     <section id="about" className="brand-story">
       <div className="container story-container">
         <div className="story-content">
-          <h2 className="story-title">The Bloodline</h2>
+          <h2 className="story-title">The Bludline</h2>
           <p className="story-text">
             BludWear is not just apparel; it is armor for the dedicated. We believe that true luxury lies in the relentless pursuit of perfection. Every seam, every fabric choice, and every design is meticulously crafted to empower the modern athlete.
           </p>
@@ -18,7 +18,14 @@ const BrandStory = () => {
           <div className="visual-block black-block"></div>
           <div className="visual-block blood-block"></div>
           <div className="visual-image-wrapper">
-             <img src="/hero.png" alt="BludWear Aesthetics" className="story-image" />
+            <video
+              src="https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/TheBludLine/reel%201.mp4"
+              className="story-image"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
           </div>
         </div>
       </div>

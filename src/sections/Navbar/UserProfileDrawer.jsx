@@ -1,14 +1,32 @@
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
+import { fetchProducts } from '../../backend/products';
+import { createProductSlug, getProductImages, formatPrice } from '../../utils/helpers';
 import './UserProfileDrawer.css';
-import { products } from '../../data/products';
 
 const UserProfileDrawer = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
+  const { user, isAdmin, signOut } = useAuth();
+  const { openCart } = useCart();
+  const [popularProducts, setPopularProducts] = useState([]);
 
-  // Grab 2 products for the "Popular Today" section
-  const popularProducts = products.slice(0, 2);
+  useEffect(() => {
+    if (isOpen && popularProducts.length === 0) {
+      const loadPopular = async () => {
+        try {
+          const data = await fetchProducts();
+          if (data && data.length > 0) {
+            setPopularProducts(data.slice(0, 2));
+          }
+        } catch (err) {
+          console.error("Failed to load popular products", err);
+        }
+      };
+      loadPopular();
+    }
+  }, [isOpen, popularProducts.length]);
 
   const handleLoginClick = () => {
     onClose();
@@ -42,7 +60,12 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
           
           <div className="auth-buttons">
             {user ? (
-              <button className="drawer-btn primary-btn" onClick={() => { signOut(); onClose(); }}>SIGN OUT</button>
+              <>
+                {isAdmin && (
+                  <button className="drawer-btn primary-btn" onClick={() => { onClose(); navigate('/admin'); }} style={{ marginBottom: '10px' }}>ADMIN PANEL</button>
+                )}
+                <button className="drawer-btn shop-btn" onClick={() => { signOut(); onClose(); }}>SIGN OUT</button>
+              </>
             ) : (
               <>
                 <button className="drawer-btn primary-btn" onClick={handleLoginClick}>SIGN IN OR SIGN UP</button>
@@ -52,23 +75,26 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
           </div>
           
           <div className="drawer-links-list">
-            <a href="#" className="drawer-link">Your Cart</a>
-            <a href="#" className="drawer-link">Wishlisted Items</a>
-            <a href="#" className="drawer-link">Your Orders</a>
-            <a href="#" className="drawer-link">Track My Order</a>
-            <a href="#" className="drawer-link">Contact Us</a>
+            <button className="drawer-link" onClick={() => { onClose(); openCart(); }}>Your Cart</button>
+            <button className="drawer-link" onClick={() => { onClose(); navigate('/wishlist'); }}>Wishlisted Items</button>
+            <button className="drawer-link" onClick={() => { onClose(); navigate('/orders'); }}>Your Orders</button>
+            <button className="drawer-link" onClick={() => { onClose(); navigate('/orders'); }}>Track My Order</button>
+            <button className="drawer-link" onClick={() => { onClose(); navigate('/contact-us'); }}>Contact Us</button>
           </div>
           
           <div className="drawer-section">
             <h3 className="drawer-section-title">POPULAR TODAY</h3>
             <div className="drawer-popular-grid">
-              {popularProducts.map(product => (
-                <div key={product.id} className="drawer-product">
-                  <img src={product.image} alt={product.name} />
-                  <p className="drawer-product-name">{product.name}</p>
-                  <p className="drawer-product-price">{product.price}</p>
-                </div>
-              ))}
+              {popularProducts.map(product => {
+                const img = getProductImages(product)[0] || '/placeholder.png';
+                return (
+                  <div key={product.id} className="drawer-product" onClick={() => { onClose(); navigate(`/products/${createProductSlug(product)}`); }} style={{ cursor: 'pointer' }}>
+                    <img src={img} alt={product.name} />
+                    <p className="drawer-product-name">{product.name}</p>
+                    <p className="drawer-product-price">{formatPrice(product.price)}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>

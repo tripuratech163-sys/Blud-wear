@@ -1,0 +1,167 @@
+.video-gallery {
+  padding: 3rem 0;
+  background-color: #050505;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.video-gallery .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.video-gallery .section-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.video-gallery .section-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.75rem;
+  color: #fff;
+}
+
+.video-gallery .section-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary, #888);
+}
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.video-card {
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 0.6rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.video-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.02);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.video-thumbnail-wrapper {
+  position: relative;
+  aspect-ratio: 16/9;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #000;
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.video-card:hover .video-thumbnail {
+  transform: scale(1.05);
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.video-card:hover .play-overlay {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.play-btn-circle {
+  width: 50px;
+  height: 50px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.video-card:hover .play-btn-circle {
+  transform: scale(1.15);
+  background-color: var(--color-blood-main, #c0392b);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(192, 57, 43, 0.5);
+}
+
+.video-card-title {
+  font-family: var(--font-heading, 'Outfit', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0.75rem 0.25rem 0.15rem 0.25rem;
+  letter-spacing: 0.5px;
+}
+
+/* Lightbox player styles */
+.video-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-lightbox-content {
+  position: relative;
+  width: 90%;
+  max-width: 960px;
+  aspect-ratio: 16/9;
+  background-color: #000;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2.5rem;
+  cursor: pointer;
+  z-index: 10001;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.lightbox-close:hover {
+  color: var(--color-blood-main, #c0392b);
+}
+
+.lightbox-video-player {
+  width: 100%;
+  height: 100%;
+  display: block;
+}

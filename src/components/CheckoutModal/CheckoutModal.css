@@ -1,0 +1,349 @@
+.checkout-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkout-modal-content {
+  background-color: #fff;
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  max-height: 85vh;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  color: #000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.checkout-modal-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eaeaea;
+  background-color: #fafafa;
+}
+
+.c-logo {
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+.c-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.checkout-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f7f7f7;
+}
+
+.c-summary-block {
+  background-color: #fff;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 1rem;
+}
+
+.c-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.c-coupon-block {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #0b8e21;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem;
+  background-color: rgba(11, 142, 33, 0.1);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.c-coupon-icon {
+  background: #0b8e21;
+  color: #fff;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.c-steps-container {
+  padding: 1.5rem;
+  background-color: #fff;
+  min-height: 100%;
+}
+
+.c-step-auth h3, .c-step-address h3, .c-step-payment h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+
+.c-step-auth p, .c-step-payment p {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+.c-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.c-country-code {
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-right: 1px solid #ccc;
+  color: #333;
+  font-weight: 500;
+}
+
+.c-input-wrapper input {
+  flex: 1;
+  border: none;
+  padding: 1rem;
+  font-size: 1rem;
+  outline: none;
+  background: #fff;
+  color: #000;
+}
+
+.c-btn-primary {
+  width: 100%;
+  padding: 1rem;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.c-btn-primary:hover {
+  opacity: 0.8;
+}
+
+.c-btn-text {
+  width: 100%;
+  padding: 1rem;
+  background: none;
+  border: none;
+  color: #0066cc;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.c-error {
+  color: #e53935;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.c-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.c-form-grid input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  background: #fff;
+  color: #000;
+}
+
+.c-payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.c-pay-btn {
+  padding: 1.25rem;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.c-pay-btn:hover {
+  border-color: #000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.c-processing-overlay {
+  text-align: center;
+  padding: 2rem;
+}
+
+.c-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #000;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.checkout-modal-footer {
+  padding: 1rem 1.5rem;
+  background-color: #fafafa;
+  border-top: 1px solid #eaeaea;
+}
+
+.c-trust-badges {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
+
+.c-badge {
+  font-size: 0.75rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.c-powered-by {
+  text-align: center;
+  font-size: 0.7rem;
+  color: #888;
+}
+
+.c-powered-by strong {
+  color: #333;
+}
+
+.animate-in {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-height: 800px) {
+  .checkout-modal-content {
+    max-height: 95vh;
+  }
+}
+
+@media (max-width: 500px) {
+  .checkout-modal-content {
+    max-height: 100vh;
+    border-radius: 0;
+  }
+}
+
+.c-payment-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.c-payment-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.c-payment-card:hover {
+  border-color: #000;
+  background-color: #fafafa;
+}
+
+.c-payment-card.active {
+  border-color: #000;
+  border-width: 2px;
+  background-color: #fafafa;
+  padding: calc(1rem - 1px); /* Prevent border jump */
+}
+
+.c-payment-card .pay-icon {
+  font-size: 1.5rem;
+}
+
+.pay-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: left;
+}
+
+.pay-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #000;
+}
+
+.pay-desc {
+  font-size: 0.75rem;
+  color: #666;
+}
+

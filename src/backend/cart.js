@@ -10,6 +10,8 @@ export const getCart = async (userId) => {
     .select(`
       id,
       quantity,
+      color,
+      size,
       products (
         id,
         name,
@@ -26,16 +28,23 @@ export const getCart = async (userId) => {
 /**
  * Add an item to the cart
  */
-export const addToCart = async (userId, productId, quantity = 1) => {
+export const addToCart = async (userId, productId, quantity = 1, color = null, size = null) => {
   if (!supabase) throw new Error('Supabase client not initialized');
   
-  // First check if it already exists
-  const { data: existing } = await supabase
+  // First check if it already exists with same color and size
+  let query = supabase
     .from('cart')
     .select('*')
     .eq('user_id', userId)
-    .eq('product_id', productId)
-    .single();
+    .eq('product_id', productId);
+    
+  if (color) query = query.eq('color', color);
+  else query = query.is('color', null);
+  
+  if (size) query = query.eq('size', size);
+  else query = query.is('size', null);
+
+  const { data: existing } = await query.maybeSingle();
 
   if (existing) {
     // Update quantity
@@ -51,7 +60,7 @@ export const addToCart = async (userId, productId, quantity = 1) => {
     const { data, error } = await supabase
       .from('cart')
       .insert([
-        { user_id: userId, product_id: productId, quantity }
+        { user_id: userId, product_id: productId, quantity, color, size }
       ])
       .select();
     if (error) throw error;

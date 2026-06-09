@@ -43,6 +43,7 @@ export const toggleWishlist = async (userId, productId) => {
       .delete()
       .eq('id', existing.id);
     if (error) throw error;
+    window.dispatchEvent(new CustomEvent('wishlist-changed'));
     return { added: false };
   } else {
     // Add it
@@ -52,6 +53,7 @@ export const toggleWishlist = async (userId, productId) => {
         { user_id: userId, product_id: productId }
       ]);
     if (error) throw error;
+    window.dispatchEvent(new CustomEvent('wishlist-changed'));
     return { added: true };
   }
 };

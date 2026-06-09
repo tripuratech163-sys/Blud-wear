@@ -1,13 +1,13 @@
 .premium-outfits {
-  padding: 4rem 0 8rem 0;
+  padding: 3rem 0 4rem 0;
   background-color: var(--color-bg-primary);
   text-align: center;
 }
 
 .premium-title {
-  font-size: clamp(1.2rem, 3vw, 1.8rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
   color: var(--color-text-primary);
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
   font-weight: 600;
   letter-spacing: 1px;
 }
@@ -19,7 +19,7 @@
 .outfits-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .outfit-card {
@@ -35,7 +35,7 @@
   height: 100%;
   object-fit: contain; /* Blends cleanly with the white container */
   transition: transform var(--transition-slow);
-  padding: 1rem; /* Give a little breathing room if images hit the edges */
+  padding: 0.75rem; /* Give a little breathing room if images hit the edges */
 }
 
 .outfit-card:hover .outfit-image {
@@ -47,7 +47,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 1.5rem 1rem;
+  padding: 1rem 0.75rem;
   background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
   display: flex;
   justify-content: space-between;
@@ -71,6 +71,37 @@
 
 .outfit-card:hover .outfit-icon {
   transform: translateX(5px);
+}
+
+/* Coming Soon Overlay */
+.outfit-coming-soon {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.outfit-coming-soon span {
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  padding: 0.5rem 1.2rem;
+  backdrop-filter: blur(2px);
+}
+
+.outfit-card--disabled {
+  cursor: default;
+}
+
+.outfit-card--disabled:hover .outfit-image {
+  transform: none;
 }
 
 /* Mobile Optimization */

@@ -1,29 +1,51 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  products as localProducts,
-  createProductSlug,
-  mergeLocalProductImages,
-} from '../../data/products';
 import { fetchProducts } from '../../backend/products';
+import { createProductSlug, getProductImages, formatPrice } from '../../utils/helpers';
 import './FeaturedProducts.css';
 
 const FeaturedProducts = () => {
-  const [products, setProducts] = useState(localProducts); // Start with local data immediately
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadProducts = async () => {
       try {
         const data = await fetchProducts();
         if (data && data.length > 0) {
-          setProducts(mergeLocalProductImages(data).slice(0, 4)); // Show first 4 as "New Arrivals"
+          // Filter products by gender
+          const men = data.filter(p => p.gender?.toLowerCase() === 'men');
+          const women = data.filter(p => p.gender?.toLowerCase() === 'women');
+          
+          // Interleave them: 1 men, 1 women, 1 men, 1 women...
+          const alternating = [];
+          const maxLen = Math.max(men.length, women.length);
+          for (let i = 0; i < maxLen; i++) {
+            if (men[i]) alternating.push(men[i]);
+            if (women[i]) alternating.push(women[i]);
+          }
+          
+          // Show first 4 as "New Arrivals"
+          setProducts(alternating.slice(0, 4));
         }
-      } catch {
-        // Supabase not configured — keep showing local data
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
+      } finally {
+        setLoading(false);
       }
     };
     loadProducts();
   }, []);
+
+  if (loading) {
+    return (
+      <section id="collection" className="featured-products">
+        <div className="container" style={{ textAlign: 'center', padding: '4rem 0', color: '#fff' }}>
+          Loading products...
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="collection" className="featured-products">
@@ -34,36 +56,37 @@ const FeaturedProducts = () => {
         </div>
 
         <div className="product-grid">
-          {products.map(product => (
-            <Link
-              key={product.id}
-              to={`/products/${createProductSlug(product)}`}
-              className="product-card"
-            >
-              <div className="product-image-container">
-                {product.tag && (
-                  <span className="product-tag">{product.tag}</span>
-                )}
-                <img src={product.image} alt={product.name} className="product-image" />
-                <div className="product-overlay">
-                  <span className="add-to-cart">View Product</span>
+          {products.map(product => {
+            const productImage = getProductImages(product)[0] || '/placeholder.png';
+
+            return (
+              <Link
+                key={product.id}
+                to={`/products/${createProductSlug(product)}`}
+                className="product-card"
+              >
+                <div className="product-image-container">
+                  {product.tag && (
+                    <span className="product-tag">{product.tag}</span>
+                  )}
+                  <img src={productImage} alt={product.name} className="product-image" />
+                  <div className="product-overlay">
+                    <span className="add-to-cart">View Product</span>
+                  </div>
                 </div>
-              </div>
-              <div className="product-info">
-                <span className="product-category">{product.category}</span>
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-price">
-                  {product.original_price && (
-                    <span className="product-original-price">{product.original_price}</span>
-                  )}
-                  {product.originalPrice && (
-                    <span className="product-original-price">{product.originalPrice}</span>
-                  )}
-                  {product.price}
-                </p>
-              </div>
-            </Link>
-          ))}
+                <div className="product-info">
+                  <span className="product-category">{product.category}</span>
+                  <h3 className="product-name">{product.name}</h3>
+                  <p className="product-price">
+                    {product.original_price && (
+                      <span className="product-original-price">{formatPrice(product.original_price)}</span>
+                    )}
+                    <span className="product-current-price">{formatPrice(product.price)}</span>
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  min-height: calc(100dvh - 140px); /* Adjusted to fit under navbar/announcement bar */
+  min-height: 72vh; /* Adjusted to fit under navbar and show next fold */
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -39,13 +39,13 @@
 .hero-content {
   position: relative;
   z-index: 1;
-  padding-top: 80px;
+  padding-top: 20px;
 }
 
 .hero-title {
-  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
   line-height: 1;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   display: flex;
   flex-direction: column;
 }
@@ -66,10 +66,10 @@
 }
 
 .hero-subtitle {
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
   color: var(--color-text-secondary);
   max-width: 600px;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   line-height: 1.6;
   opacity: 0;
   animation: fadeIn 1s forwards 0.6s;

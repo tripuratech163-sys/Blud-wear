@@ -1,0 +1,130 @@
+.order-success-page {
+  background-color: var(--color-bg-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.success-main {
+  flex: 1;
+  padding: 4rem 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.success-card {
+  background-color: #050505;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 3rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.success-icon {
+  width: 80px;
+  height: 80px;
+  background-color: rgba(211, 23, 23, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.success-title {
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: var(--color-text-primary);
+}
+
+.success-subtitle {
+  color: #aaa;
+  margin-bottom: 2.5rem;
+}
+
+.receipt-container {
+  background-color: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  text-align: left;
+  margin-bottom: 2.5rem;
+}
+
+.receipt-header {
+  padding: 1.5rem;
+  border-bottom: 1px dashed #333;
+}
+
+.receipt-shipping {
+  padding: 1.5rem;
+  border-bottom: 1px dashed #333;
+}
+
+.receipt-shipping h3 {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin: 0 0 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.receipt-shipping p {
+  margin: 0 0 0.25rem;
+  color: #ddd;
+  font-size: 0.95rem;
+}
+
+.receipt-totals {
+  padding: 1.5rem;
+  background-color: #0a0a0a;
+  border-radius: 0 0 6px 6px;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.receipt-row:last-child {
+  margin-bottom: 0;
+}
+
+.receipt-row strong {
+  color: #fff;
+}
+
+.receipt-final {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #333;
+  font-size: 1.2rem;
+  color: #fff;
+  font-weight: 900;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--color-blood-main);
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+}
+
+.btn-primary:hover {
+  background-color: #6a0000;
+}

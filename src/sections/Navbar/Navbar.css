@@ -3,7 +3,7 @@
   top: 0;
   width: 100%;
   z-index: 100;
-  padding: 1.25rem 0;
+  padding: 0.85rem 0;
   transition: background-color var(--transition-normal);
   background-color: var(--color-bg-primary);
   border-bottom: 1px solid var(--color-border);
@@ -49,7 +49,7 @@
 
 /* Logo image styling */
 .logo-img {
-  height: 60px;
+  height: 48px;
   width: auto;
   max-width: 160px;
   object-fit: contain;

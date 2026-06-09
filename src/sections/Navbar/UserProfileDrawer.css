@@ -146,6 +146,13 @@
   color: var(--color-text-primary);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   transition: color var(--transition-fast);
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  display: block;
+  font-family: inherit;
 }
 
 .drawer-link:last-child {
