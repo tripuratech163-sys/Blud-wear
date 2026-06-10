@@ -387,6 +387,12 @@ const ProductPage = () => {
                 {cartStatus && <p className="product-cart-status">{cartStatus}</p>}
 
                 <div className="product-details-list">
+                  {product?.gsm && (
+                    <div>
+                      <span>Fabric GSM</span>
+                      <p>{product.gsm}</p>
+                    </div>
+                  )}
                   <div>
                     <span>Fit</span>
                     <p>Athletic compression-inspired silhouette.</p>

@@ -19,6 +19,7 @@ const ProductForm = () => {
     category: '',
     gender: 'men',
     tag: '',
+    gsm: '',
     stock: 0,
     variants: []
   });
@@ -54,6 +55,7 @@ const ProductForm = () => {
           category: product.category || '',
           gender: product.gender || 'men',
           tag: product.tag || '',
+          gsm: product.gsm || '',
           stock: product.stock || 0,
           variants: product.variants || []
         });
@@ -172,6 +174,10 @@ const ProductForm = () => {
           <div>
             <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888' }}>Tag (Optional)</label>
             <input type="text" name="tag" value={formData.tag} onChange={handleChange} placeholder="e.g. NEW, BESTSELLER" style={inputStyle} />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888' }}>GSM (Optional)</label>
+            <input type="text" name="gsm" value={formData.gsm} onChange={handleChange} placeholder="e.g. 240 GSM" style={inputStyle} />
           </div>
         </div>
 

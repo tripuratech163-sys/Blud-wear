@@ -54,13 +54,14 @@ const ProductsList = () => {
               <th>Price</th>
               <th>Category</th>
               <th>Gender</th>
+              <th>GSM</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {products.length === 0 ? (
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center', padding: '2rem' }}>No products found.</td>
+                <td colSpan="7" style={{ textAlign: 'center', padding: '2rem' }}>No products found.</td>
               </tr>
             ) : (
               products.map(product => (
@@ -76,6 +77,7 @@ const ProductsList = () => {
                   <td>{product.price}</td>
                   <td>{product.category}</td>
                   <td style={{ textTransform: 'capitalize' }}>{product.gender}</td>
+                  <td>{product.gsm || 'N/A'}</td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <button 

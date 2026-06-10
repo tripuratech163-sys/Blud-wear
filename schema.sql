@@ -12,6 +12,7 @@ CREATE TABLE products (
   category TEXT NOT NULL,
   gender TEXT NOT NULL,
   tag TEXT,
+  gsm TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -31,6 +32,8 @@ CREATE TABLE cart (
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   product_id UUID REFERENCES products(id) ON DELETE CASCADE NOT NULL,
   quantity INTEGER DEFAULT 1 NOT NULL,
+  color TEXT,
+  size TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -84,6 +87,8 @@ CREATE TABLE order_items (
   product_id UUID REFERENCES products(id) ON DELETE SET NULL, -- Don't delete order history if a product is removed
   quantity INTEGER NOT NULL,
   price_at_time TEXT NOT NULL, -- Snapshot of the price
+  color TEXT,
+  size TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
