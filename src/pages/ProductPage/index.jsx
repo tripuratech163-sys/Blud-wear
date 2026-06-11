@@ -5,7 +5,7 @@ import { fetchProducts } from '../../backend/products';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { createProductSlug, getProductImages, formatPrice } from '../../utils/helpers';
-import { fetchProductReviews, createProductReview } from '../../backend/reviews';
+import { fetchProductReviews, createProductReview, deleteProductReview } from '../../backend/reviews';
 import AnnouncementBar from '../../sections/AnnouncementBar';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
@@ -16,7 +16,7 @@ const ProductPage = () => {
   const [searchParams] = useSearchParams();
   const urlVariant = searchParams.get('variant'); // e.g. "Ocean Blue"
   
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { openCart, refreshCart } = useCart();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +38,14 @@ const ProductPage = () => {
   const [reviewBody, setReviewBody] = useState('');
   const [reviewSuccess, setReviewSuccess] = useState(false);
   const [reviewError, setReviewError] = useState('');
+
+  // Auto-populate user info in review form
+  useEffect(() => {
+    if (user) {
+      setReviewEmail(user.email || '');
+      setReviewName(user.user_metadata?.full_name || user.user_metadata?.name || '');
+    }
+  }, [user]);
 
   // Sizing & Conversion Strategy states
   const [showSizeGuide, setShowSizeGuide] = useState(false);
@@ -118,6 +126,18 @@ const ProductPage = () => {
       setReviewError(err.message || 'Failed to submit review. Please try again.');
     } finally {
       setSubmittingReview(false);
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm("Are you sure you want to delete this review? This action cannot be undone.")) return;
+    try {
+      await deleteProductReview(reviewId);
+      loadReviews();
+      alert("Review deleted successfully.");
+    } catch (err) {
+      console.error("Failed to delete review:", err);
+      alert(err.message || "Failed to delete review.");
     }
   };
 
@@ -765,6 +785,15 @@ const ProductPage = () => {
                           </div>
                           {review.title && <p className="review-title">{review.title}</p>}
                           <p className="review-body">{review.body}</p>
+                          {isAdmin && (
+                            <button 
+                              type="button" 
+                              className="admin-delete-review-btn"
+                              onClick={() => handleDeleteReview(review.id)}
+                            >
+                              🗑 Delete Review
+                            </button>
+                          )}
                         </div>
                       );
                     })}

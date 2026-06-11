@@ -5,6 +5,7 @@ import { useCart } from '../../context/CartContext';
 import { supabase } from '../../lib/supabase';
 import { clearCart } from '../../backend/cart';
 import { createRazorpayOrder, openRazorpayCheckout } from '../../backend/razorpay';
+import { deductOrderItems } from '../../backend/orders';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import './CheckoutPage.css';
@@ -238,6 +239,13 @@ const CheckoutPage = () => {
       .insert(orderItemsPayload);
 
     if (itemsError) throw itemsError;
+
+    // Deduct stock inventory for placed order items
+    try {
+      await deductOrderItems(orderItemsPayload);
+    } catch (deductErr) {
+      console.error("Failed to deduct inventory stock:", deductErr);
+    }
 
     // Clear Cart
     await clearCart(user.id);

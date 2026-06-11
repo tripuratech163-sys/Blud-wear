@@ -56,7 +56,7 @@ const UserOrdersPage = () => {
     const status = order.shiprocket_awb ? order.shiprocket_status : order.status;
     const s = String(status || 'pending').toLowerCase();
     if (s === 'delivered') return 'status-delivered';
-    if (s === 'shipped' || s === 'in_transit' || s === 'processing') return 'status-shipped';
+    if (s === 'shipped' || s === 'in_transit' || s === 'processing' || s === 'confirmed') return 'status-shipped';
     if (s === 'cancelled' || s === 'refunded') return 'status-cancelled';
     return 'status-pending';
   };

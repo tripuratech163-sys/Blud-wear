@@ -1,18 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
+import { fetchTopReviews } from '../../backend/reviews';
 import './AboutUsPage.css';
 
 const AboutUsPage = () => {
-  useEffect(() => {
-    document.title = "About Us & Manifesto | BludWear — Premium Athleisure";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", "Learn about BludWear's commitment to high-performance sportswear. Built with premium GSM fabrics and athletic compression for modern warriors.");
-    }
-  }, []);
-
-  const testimonials = [
+  const staticTestimonials = [
     {
       id: 1,
       name: "Rohit Deshmukh",
@@ -41,6 +34,37 @@ const AboutUsPage = () => {
       verified: true
     }
   ];
+
+  const [testimonials, setTestimonials] = useState(staticTestimonials);
+
+  useEffect(() => {
+    document.title = "About Us & Manifesto | BludWear — Premium Athleisure";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", "Learn about BludWear's commitment to high-performance sportswear. Built with premium GSM fabrics and athletic compression for modern warriors.");
+    }
+
+    const loadTestimonials = async () => {
+      try {
+        const dbReviews = await fetchTopReviews(3);
+        if (dbReviews && dbReviews.length > 0) {
+          const formatted = dbReviews.map((r, idx) => ({
+            id: r.id,
+            name: r.name,
+            role: r.products ? `Verified Buyer of ${r.products.name}` : "Verified Buyer",
+            image: `https://images.unsplash.com/photo-${1500648767791 + idx}?auto=format&fit=crop&w=150&q=80`,
+            quote: r.body,
+            rating: r.rating,
+            verified: true
+          }));
+          setTestimonials(formatted);
+        }
+      } catch (err) {
+        console.error("Failed to load database testimonials, falling back to defaults:", err);
+      }
+    };
+    loadTestimonials();
+  }, []);
 
   return (
     <div className="about-page-wrapper">
