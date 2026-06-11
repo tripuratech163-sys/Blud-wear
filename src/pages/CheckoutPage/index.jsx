@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -32,6 +32,12 @@ const CheckoutPage = () => {
   const [paymentMethod, setPaymentMethod] = useState('UPI');
   const [processing, setProcessing] = useState(false);
   const [checkoutError, setCheckoutError] = useState('');
+
+  // Promo code states
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState(null); // { code: '...', type: 'percent', value: 10 }
+  const [promoError, setPromoError] = useState('');
+  const [promoSuccess, setPromoSuccess] = useState('');
 
   useEffect(() => {
     // If cart is empty and has finished loading, redirect back to collection
@@ -70,14 +76,66 @@ const CheckoutPage = () => {
     setShipping(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Check if a Top and a Bottom are in the cart to qualify for auto-bundle discount
+  const hasBundle = useMemo(() => {
+    let hasTopOrOuterwear = false;
+    let hasBottom = false;
+    cartItems.forEach(item => {
+      const cat = item.products.category?.toLowerCase() || '';
+      if (cat === 'tops' || cat === 'outerwear') {
+        hasTopOrOuterwear = true;
+      }
+      if (cat === 'bottoms') {
+        hasBottom = true;
+      }
+    });
+    return hasTopOrOuterwear && hasBottom;
+  }, [cartItems]);
+
+  // Determine active discount (manually entered code or auto-applied bundle discount)
+  const activeDiscount = useMemo(() => {
+    if (appliedDiscount) return appliedDiscount;
+    if (hasBundle) {
+      return { code: 'BUNDLE15 (Auto)', type: 'percent', value: 15 };
+    }
+    return null;
+  }, [appliedDiscount, hasBundle]);
+
   // Pricing calculations
   const basePrice = cartItems.reduce((acc, item) => {
     const priceNum = Number(item.products.price.replace(/[^0-9.-]+/g,"")) || 0;
     return acc + (priceNum * item.quantity);
   }, 0);
 
-  const gstAmount = basePrice * 0.18;
-  const finalTotal = basePrice + gstAmount;
+  const discountAmount = activeDiscount 
+    ? activeDiscount.type === 'percent' 
+      ? basePrice * (activeDiscount.value / 100) 
+      : 0
+    : 0;
+
+  const discountedBasePrice = basePrice - discountAmount;
+  const gstAmount = discountedBasePrice * 0.18;
+  const finalTotal = discountedBasePrice + gstAmount;
+
+  const handleApplyPromo = (e) => {
+    e.preventDefault();
+    setPromoError('');
+    setPromoSuccess('');
+    
+    const code = promoCode.trim().toUpperCase();
+    if (!code) return;
+
+    if (code === 'BLUD10') {
+      setAppliedDiscount({ code: 'BLUD10', type: 'percent', value: 10 });
+      setPromoSuccess('Promo code BLUD10 applied! 10% discount dynamic recalculation.');
+    } else if (code === 'BUNDLE15') {
+      setAppliedDiscount({ code: 'BUNDLE15', type: 'percent', value: 15 });
+      setPromoSuccess('Promo code BUNDLE15 applied! 15% discount dynamic recalculation.');
+    } else {
+      setPromoError('Invalid coupon code. Try BLUD10 or BUNDLE15.');
+      setAppliedDiscount(null);
+    }
+  };
 
   const handlePlaceOrder = async (e) => {
     e.preventDefault();
@@ -145,7 +203,7 @@ const CheckoutPage = () => {
       total_amount: finalTotal,
       subtotal: basePrice,
       gst_amount: gstAmount,
-      discount_amount: 0,
+      discount_amount: discountAmount,
       status: 'confirmed',
       shipping_name: shipping.name,
       shipping_phone: shipping.phone,
@@ -319,12 +377,81 @@ const CheckoutPage = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Promo Code Input Box */}
+              <form onSubmit={handleApplyPromo} className="promo-code-form" style={{ margin: '1.5rem 0', borderTop: '1px solid #222', paddingTop: '1.5rem' }}>
+                <div className="promo-input-group" style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input
+                    type="text"
+                    placeholder="DISCOUNT CODE"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value)}
+                    style={{
+                      flex: 1,
+                      backgroundColor: '#050505',
+                      border: '1px solid #222',
+                      color: '#fff',
+                      padding: '0.65rem 1rem',
+                      fontSize: '0.85rem',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                      fontWeight: '700'
+                    }}
+                  />
+                  <button 
+                    type="submit" 
+                    className="apply-promo-btn"
+                    style={{
+                      backgroundColor: '#fff',
+                      color: '#000',
+                      border: 'none',
+                      padding: '0.65rem 1.5rem',
+                      fontSize: '0.8rem',
+                      fontWeight: '900',
+                      letterSpacing: '1.5px',
+                      textTransform: 'uppercase',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Apply
+                  </button>
+                </div>
+                {promoError && <p className="promo-message error" style={{ color: '#ff3b30', fontSize: '0.8rem', marginTop: '0.5rem', fontWeight: 'bold' }}>{promoError}</p>}
+                {promoSuccess && <p className="promo-message success" style={{ color: '#2ecc71', fontSize: '0.8rem', marginTop: '0.5rem', fontWeight: 'bold' }}>{promoSuccess}</p>}
+                {appliedDiscount && (
+                  <div className="applied-code-pill" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid #333', padding: '0.25rem 0.75rem', borderRadius: '100px', fontSize: '0.75rem', marginTop: '0.75rem', fontWeight: '700', letterSpacing: '0.5px' }}>
+                    <span>{appliedDiscount.code}</span>
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        setAppliedDiscount(null);
+                        setPromoCode('');
+                        setPromoSuccess('');
+                      }}
+                      style={{ background: 'none', border: 'none', color: '#ff3b30', cursor: 'pointer', fontSize: '1rem', padding: '0', display: 'flex', alignItems: 'center' }}
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+                {hasBundle && !appliedDiscount && (
+                  <p className="auto-promo-info" style={{ color: '#2ecc71', fontSize: '0.8rem', marginTop: '0.75rem', fontWeight: '600' }}>
+                    🎉 Bundle Kit detected! Automatic 15% discount applied.
+                  </p>
+                )}
+              </form>
               
               <div className="summary-totals">
                 <div className="summary-line">
                   <span>Base Price</span>
                   <span>₹{basePrice.toFixed(2)}</span>
                 </div>
+                {activeDiscount && (
+                  <div className="summary-line discount-line" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                    <span>Discount ({activeDiscount.code})</span>
+                    <span>-₹{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="summary-line">
                   <span>GST (18%)</span>
                   <span>₹{gstAmount.toFixed(2)}</span>

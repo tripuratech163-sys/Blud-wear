@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Footer.css';
 
 const Footer = () => {
@@ -30,21 +31,22 @@ const Footer = () => {
         <div className="footer-links">
           <div className="link-group">
             <h3>Shop</h3>
-            <a href="#">New Arrivals</a>
-            <a href="#">Outerwear</a>
-            <a href="#">Bottoms</a>
-            <a href="#">Accessories</a>
+            <Link to="/collection">New Arrivals</Link>
+            <Link to="/collection">Outerwear</Link>
+            <Link to="/collection">Bottoms</Link>
+            <Link to="/collection">Accessories</Link>
           </div>
           <div className="link-group">
             <h3>Support</h3>
-            <a href="#">FAQ</a>
-            <a href="#">Shipping & Returns</a>
-            <a href="mailto:hello@bludwear.com">Contact Us</a>
+            <Link to="/guides">Guides & FAQ</Link>
+            <Link to="/sustainability">Shipping & Returns</Link>
+            <Link to="/contact-us">Contact Us</Link>
           </div>
           <div className="link-group">
-            <h3>Legal</h3>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <h3>Brand</h3>
+            <Link to="/about">About Us</Link>
+            <Link to="/sustainability">Sustainability</Link>
+            <Link to="/guides">Expert Guides</Link>
           </div>
           <div className="link-group">
             <h3>Connect</h3>

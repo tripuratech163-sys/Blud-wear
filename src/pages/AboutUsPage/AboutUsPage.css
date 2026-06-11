@@ -1,0 +1,290 @@
+/* About Us Styling — Premium Dark Aesthetic */
+
+.about-page-wrapper {
+  background-color: #050505;
+  color: #ffffff;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+.about-main-content {
+  padding-bottom: 5rem;
+}
+
+/* About Hero */
+.about-hero {
+  position: relative;
+  height: 60vh;
+  min-height: 400px;
+  background-image: url('https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7632.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.about-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(5,5,5,0.4) 0%, rgba(5,5,5,0.95) 100%);
+  z-index: 1;
+}
+
+.about-hero-container {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 1.5rem;
+}
+
+.about-tag {
+  color: #ff3b30;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 59, 48, 0.4);
+  padding: 0.3rem 1rem;
+  background: rgba(255, 59, 48, 0.05);
+  border-radius: 2px;
+}
+
+.about-title {
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin: 0.5rem 0 1.25rem;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+.about-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: #ccc;
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* Story Section */
+.about-story-section {
+  padding: 6rem 1.5rem;
+}
+
+.story-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .story-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+.story-text-block h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.story-text-block h2::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 50px;
+  height: 3px;
+  background-color: #ff3b30;
+}
+
+.story-text-block p {
+  color: #aaa;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+}
+
+.about-accent-img {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #222;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.4s ease;
+  object-fit: cover;
+  height: 380px;
+}
+
+.about-accent-img:hover {
+  transform: scale(1.02);
+}
+
+/* Expertise Section */
+.about-expertise {
+  background-color: #0d0d0d;
+  border-top: 1px solid #1a1a1a;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 6rem 1.5rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.section-subtitle {
+  color: #666;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  margin-bottom: 4rem;
+  text-transform: uppercase;
+}
+
+.expertise-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.expertise-card {
+  background-color: #050505;
+  border: 1px solid #222;
+  padding: 3rem 2.25rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.expertise-card:hover {
+  border-color: #ff3b30;
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(255, 59, 48, 0.05);
+}
+
+.card-num {
+  font-size: 4rem;
+  font-weight: 900;
+  color: rgba(255, 59, 48, 0.05);
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  line-height: 1;
+}
+
+.expertise-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.expertise-card p {
+  color: #888;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Testimonials */
+.about-testimonials {
+  padding: 6rem 1.5rem;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.25rem;
+}
+
+.testimonial-card {
+  background-color: #0d0d0d;
+  border: 1px solid #1a1a1a;
+  padding: 2.25rem;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.testimonial-header .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #222;
+}
+
+.testimonial-header .name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.verified-badge {
+  font-size: 0.65rem;
+  background-color: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-weight: 500;
+  border: 1px solid rgba(46, 204, 113, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.testimonial-header .role {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0;
+}
+
+.testimonial-card .stars {
+  color: #f1c40f;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.testimonial-card .quote {
+  color: #bbb;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  font-style: italic;
+  margin: 0;
+  flex-grow: 1;
+}

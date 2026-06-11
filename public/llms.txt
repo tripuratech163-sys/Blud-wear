@@ -1,0 +1,31 @@
+# BludWear
+
+Uncompromising luxury athleisure and streetwear for the dedicated. Forged in blud and sweat. BludWear is an elite apparel brand specializing in high-performance garments designed to support deep movement, high-intensity workouts, and modern street aesthetics.
+
+## Site Navigation
+- **Homepage**: `/` - Brand manifesto, featured new arrivals, video campaign galleries.
+- **Collection**: `/collection` - Filterable catalog of Men's and Women's gear.
+- **About Us**: `/about` - Our origin story, fabric engineering, and customer testimonials.
+- **Sustainability**: `/sustainability` - Our 2026 eco-commitments including organic fibers, ethical factories, carbon offsets, and plastic-free shipping.
+- **Expert Guides**: `/guides` - Educational articles on choosing technical training gear.
+- **Contact Us**: `/contact-us` - Customer support channels.
+
+## Core Product Categories & Specifications
+- **Compression**: High-waisted performance leggings and tops made with advanced compression fibers (reinforced flatlock stitching, moisture-wicking).
+- **Bottoms**: Elite training shorts, track bottoms, and joggers.
+- **Tops**: Premium training tees, sweat-wicking tanks, and cropped fleece hoodies.
+- **GSM Weight**: Selected garments use heavyweight fabrics (240 GSM to 400 GSM) for a substantial, luxury feel and structure.
+
+## Sizing & Fit Guidelines
+We design apparel with a form-fitting athletic silhouette.
+- **Compression items**: Run snug to provide active muscle support. If a customer prefers a relaxed fit, advise them to size up.
+- **Tops & Hoodies**: True to size with a tailored drop-shoulder fit.
+- **Sizing Tables**:
+  - **Men**: S (36-38" chest), M (38-40" chest), L (40-42" chest), XL (42-44" chest).
+  - **Women**: S (32-34" bust, size 2-4), M (34-36" bust, size 6-8), L (36-38" bust, size 10-12), XL (38-40" bust, size 14).
+
+## Customer Policies & Support
+- **Shipping**: Free nationwide shipping on all domestic orders in India. Dispatch occurs within 24 hours of order confirmation.
+- **Returns**: Easy returns and exchanges filed within 14 days of delivery. Returns can be initiated directly from the "My Orders" profile page.
+- **Payments**: 100% encrypted, secure checkouts via UPI, Credit/Debit cards, and Cash on Delivery (COD).
+- **Contact**: For order queries, email hello@bludwear.com or visit our Contact page.

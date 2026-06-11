@@ -1,0 +1,219 @@
+/* Sustainability Page Styling */
+
+.sustain-page-wrapper {
+  background-color: #050505;
+  color: #ffffff;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+.sustain-main-content {
+  padding-bottom: 5rem;
+}
+
+/* Sustain Hero */
+.sustain-hero {
+  position: relative;
+  height: 60vh;
+  min-height: 400px;
+  background-image: url('https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/DSC_7544.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.sustain-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(5,5,5,0.3) 0%, rgba(5,5,5,0.95) 100%);
+  z-index: 1;
+}
+
+.sustain-hero-container {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 1.5rem;
+}
+
+.sustain-tag {
+  color: #2ecc71; /* Green tone for sustainability theme */
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(46, 204, 113, 0.4);
+  padding: 0.3rem 1rem;
+  background: rgba(46, 204, 113, 0.05);
+  border-radius: 2px;
+}
+
+.sustain-title {
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 2px;
+  margin: 0.5rem 0 1.25rem;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+.sustain-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  color: #ccc;
+  line-height: 1.6;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* Intro Section */
+.sustain-intro {
+  padding: 6rem 1.5rem 3rem;
+  max-width: 850px;
+}
+
+.sustain-intro-block h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 1.5rem;
+}
+
+.lead-text {
+  color: #aaa;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* Pillars Section */
+.sustain-pillars {
+  padding: 3rem 1.5rem 6rem;
+}
+
+.pillars-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6rem;
+}
+
+.pillar-row {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.pillar-row.reverse {
+  grid-template-columns: 0.8fr 1.2fr;
+}
+
+.pillar-row.reverse .pillar-content {
+  grid-column: 2;
+}
+
+.pillar-row.reverse .pillar-visual {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+@media (max-width: 768px) {
+  .pillar-row, .pillar-row.reverse {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+  .pillar-row.reverse .pillar-content {
+    grid-column: auto;
+  }
+  .pillar-row.reverse .pillar-visual {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+.pillar-content {
+  position: relative;
+}
+
+.pillar-num {
+  font-size: 6rem;
+  font-weight: 900;
+  color: rgba(46, 204, 113, 0.08);
+  position: absolute;
+  top: -3.5rem;
+  left: -1rem;
+  line-height: 1;
+  z-index: 0;
+}
+
+.pillar-content h3 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.pillar-content p {
+  color: #aaa;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.pillar-box {
+  background-color: #0d0d0d;
+  border: 1px solid #1a1a1a;
+  padding: 2.5rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.border-glow:hover {
+  border-color: #2ecc71;
+  box-shadow: 0 10px 30px rgba(46, 204, 113, 0.05);
+}
+
+.pillar-box h4 {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #2ecc71;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.pillar-box ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.pillar-box li {
+  color: #eee;
+  font-size: 0.95rem;
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.pillar-box li::before {
+  content: '✦';
+  color: #2ecc71;
+  position: absolute;
+  left: 0;
+  top: 0;
+}

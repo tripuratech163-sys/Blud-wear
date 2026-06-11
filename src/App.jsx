@@ -11,6 +11,9 @@ import SeedPage from './pages/SeedPage';
 import ContactUs from './pages/ContactUs';
 import WishlistPage from './pages/WishlistPage';
 import UserOrdersPage from './pages/UserOrdersPage';
+import AboutUsPage from './pages/AboutUsPage';
+import SustainabilityPage from './pages/SustainabilityPage';
+import GuidesPage from './pages/GuidesPage';
 
 // Sections (Home page)
 import AnnouncementBar from './sections/AnnouncementBar';
@@ -75,6 +78,10 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/wishlist" element={<WishlistPage />} />
         <Route path="/orders" element={<UserOrdersPage />} />
+        <Route path="/about" element={<AboutUsPage />} />
+        <Route path="/sustainability" element={<SustainabilityPage />} />
+        <Route path="/guides" element={<GuidesPage />} />
+        <Route path="/guides/:slug" element={<GuidesPage />} />
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
