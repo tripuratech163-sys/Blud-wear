@@ -74,14 +74,23 @@ const UserOrdersPage = () => {
     return { address_line_1: addr };
   };
 
-  // Shiprocket tracking steps resolver
-  const getTrackingStep = (shiprocketStatus, status) => {
+  // Shiprocket / Active order tracking steps resolver (0 to 4)
+  const getNormalTrackingStep = (shiprocketStatus, status) => {
     const s = String(shiprocketStatus || status || 'pending').toLowerCase();
     if (s === 'delivered') return 4;
     if (s === 'out_for_delivery') return 3;
     if (s === 'shipped' || s === 'in_transit' || s === 'awb assigned') return 2;
-    if (s === 'ready_to_ship' || s === 'packed' || s === 'processing') return 1;
+    if (s === 'confirmed' || s === 'processing' || s === 'ready_to_ship' || s === 'packed') return 1;
     return 0; // Ordered
+  };
+
+  // Return tracking steps resolver (0 to 3)
+  const getReturnTrackingStep = (status) => {
+    const s = String(status || '').toLowerCase();
+    if (s === 'returned') return 3;
+    if (s === 'return approved') return 2;
+    if (s === 'return requested') return 1;
+    return 0; // Delivered (baseline for return start)
   };
 
   const handleCancelOrder = async (order) => {
@@ -188,7 +197,11 @@ const UserOrdersPage = () => {
                   day: 'numeric'
                 });
                 const addressObj = parseAddress(order.shipping_address);
-                const trackingStep = getTrackingStep(order.shiprocket_awb ? order.shiprocket_status : null, order.status);
+                const lowerStatus = String(order.status || '').toLowerCase();
+                const isCancelled = lowerStatus === 'cancelled';
+                const isReturnTimeline = ['return requested', 'return approved', 'returned'].includes(lowerStatus);
+                const normalStep = getNormalTrackingStep(order.shiprocket_awb ? order.shiprocket_status : null, order.status);
+                const returnStep = getReturnTrackingStep(order.status);
                 const statusDisplay = order.shiprocket_awb ? order.shiprocket_status : order.status;
 
                 return (
@@ -223,40 +236,111 @@ const UserOrdersPage = () => {
                     {/* Collapsible Details Section */}
                     {isExpanded && (
                       <div className="order-card-details">
-                        {/* 1. Tracking Timeline if Shiprocket tracking is active */}
-                        {order.shiprocket_awb && (
+                        {/* 1. Shipment Tracking Timeline */}
+                        {isCancelled ? (
+                          <div className="tracking-timeline-section">
+                            <h3 className="details-subheading">Order Cancelled</h3>
+                            <div className="tracking-meta">
+                              <span>Order Status: <strong style={{ color: '#ff3b30' }}>Cancelled</strong></span>
+                              <span>Payment Status: <strong>{order.payment_status || 'Refunded / N/A'}</strong></span>
+                            </div>
+                            
+                            <div className="timeline-progress-bar">
+                              <div className="timeline-line">
+                                <div 
+                                  className="timeline-line-fill cancelled-fill" 
+                                  style={{ width: '100%' }}
+                                ></div>
+                              </div>
+                              <div className="timeline-steps">
+                                <div className="timeline-step completed">
+                                  <div className="step-dot"></div>
+                                  <span className="step-label">Ordered</span>
+                                </div>
+                                <div className="timeline-step cancelled">
+                                  <div className="step-dot"></div>
+                                  <span className="step-label">Cancelled</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : isReturnTimeline ? (
+                          <div className="tracking-timeline-section">
+                            <h3 className="details-subheading">Return Progress</h3>
+                            <div className="tracking-meta">
+                              <span>Current Status: <strong style={{ color: '#f5a623' }}>{order.status}</strong></span>
+                              {order.return_reason && (
+                                <span>Reason: <strong>{order.return_reason}</strong></span>
+                              )}
+                            </div>
+                            
+                            <div className="timeline-progress-bar">
+                              <div className="timeline-line">
+                                <div 
+                                  className="timeline-line-fill returned-fill" 
+                                  style={{ width: `${(returnStep / 3) * 100}%` }}
+                                ></div>
+                              </div>
+                              <div className="timeline-steps">
+                                <div className="timeline-step completed">
+                                  <div className="step-dot"></div>
+                                  <span className="step-label">Delivered</span>
+                                </div>
+                                <div className={`timeline-step returned ${returnStep >= 1 ? 'completed' : ''}`}>
+                                  <div className="step-dot"></div>
+                                  <span className="step-label">Requested</span>
+                                </div>
+                                <div className={`timeline-step returned ${returnStep >= 2 ? 'completed' : ''}`}>
+                                  <div className="step-dot"></div>
+                                  <span className="step-label">Approved</span>
+                                </div>
+                                <div className={`timeline-step returned ${returnStep >= 3 ? 'completed' : ''}`}>
+                                  <div className="step-dot"></div>
+                                  <span className="step-label">Returned</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
                           <div className="tracking-timeline-section">
                             <h3 className="details-subheading">Delivery Progress</h3>
                             <div className="tracking-meta">
-                              <span>AWB Number: <strong>{order.shiprocket_awb}</strong></span>
-                              <span>Courier Status: <strong>{order.shiprocket_status}</strong></span>
+                              {order.shiprocket_awb ? (
+                                <>
+                                  <span>AWB Number: <strong>{order.shiprocket_awb}</strong></span>
+                                  <span>Courier Status: <strong>{order.shiprocket_status}</strong></span>
+                                </>
+                              ) : (
+                                <span>Order Status: <strong>{order.status}</strong></span>
+                              )}
+                              <span>Payment: <strong>{order.payment_method?.toUpperCase() || 'Razorpay / UPI'} ({order.payment_status || 'Paid'})</strong></span>
                             </div>
                             
                             <div className="timeline-progress-bar">
                               <div className="timeline-line">
                                 <div 
                                   className="timeline-line-fill" 
-                                  style={{ width: `${(trackingStep / 4) * 100}%` }}
+                                  style={{ width: `${(normalStep / 4) * 100}%` }}
                                 ></div>
                               </div>
                               <div className="timeline-steps">
-                                <div className={`timeline-step ${trackingStep >= 0 ? 'completed' : ''}`}>
+                                <div className={`timeline-step ${normalStep >= 0 ? 'completed' : ''}`}>
                                   <div className="step-dot"></div>
                                   <span className="step-label">Ordered</span>
                                 </div>
-                                <div className={`timeline-step ${trackingStep >= 1 ? 'completed' : ''}`}>
+                                <div className={`timeline-step ${normalStep >= 1 ? 'completed' : ''}`}>
                                   <div className="step-dot"></div>
-                                  <span className="step-label">Packed</span>
+                                  <span className="step-label">Processing</span>
                                 </div>
-                                <div className={`timeline-step ${trackingStep >= 2 ? 'completed' : ''}`}>
+                                <div className={`timeline-step ${normalStep >= 2 ? 'completed' : ''}`}>
                                   <div className="step-dot"></div>
                                   <span className="step-label">Shipped</span>
                                 </div>
-                                <div className={`timeline-step ${trackingStep >= 3 ? 'completed' : ''}`}>
+                                <div className={`timeline-step ${normalStep >= 3 ? 'completed' : ''}`}>
                                   <div className="step-dot"></div>
                                   <span className="step-label">Out for Delivery</span>
                                 </div>
-                                <div className={`timeline-step ${trackingStep >= 4 ? 'completed' : ''}`}>
+                                <div className={`timeline-step ${normalStep >= 4 ? 'completed' : ''}`}>
                                   <div className="step-dot"></div>
                                   <span className="step-label">Delivered</span>
                                 </div>

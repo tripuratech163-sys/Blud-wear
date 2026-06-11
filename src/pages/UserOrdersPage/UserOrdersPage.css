@@ -491,3 +491,35 @@
     font-size: 0.65rem;
   }
 }
+
+/* Cancelled Timeline Styles */
+.timeline-step.cancelled .step-dot {
+  background-color: #ff3b30;
+  border-color: #ff3b30;
+  box-shadow: 0 0 10px rgba(255, 59, 48, 0.4);
+}
+
+.timeline-step.cancelled .step-label {
+  color: #ff3b30;
+  font-weight: 900;
+}
+
+.timeline-line-fill.cancelled-fill {
+  background: #ff3b30;
+}
+
+/* Returned/Refunded Timeline Styles */
+.timeline-step.returned .step-dot {
+  background-color: #f5a623;
+  border-color: #f5a623;
+  box-shadow: 0 0 10px rgba(245, 166, 35, 0.4);
+}
+
+.timeline-step.returned .step-label {
+  color: #f5a623;
+  font-weight: 900;
+}
+
+.timeline-line-fill.returned-fill {
+  background: linear-gradient(90deg, #f5a623, #f39c12);
+}
