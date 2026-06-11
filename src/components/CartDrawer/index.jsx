@@ -41,7 +41,7 @@ const CartDrawer = () => {
     return acc + (priceNum * item.quantity);
   }, 0);
 
-  const freeShippingThreshold = 1000;
+  const freeShippingThreshold = 999;
   const amountAway = freeShippingThreshold - subtotal;
   const progressPercent = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 

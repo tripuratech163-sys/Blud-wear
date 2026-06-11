@@ -1,7 +1,7 @@
 import './MarqueeBanner.css';
 
 const items = [
-  "FREE SHIPPING OVER $150",
+  "FREE SHIPPING OVER RS 999",
   "BLUDWEAR — FORGED IN BLOOD & SWEAT",
   "NEW COLLECTION LIVE NOW",
   "PREMIUM LUXURY ATHLEISURE",
