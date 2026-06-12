@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { supabase } from '../../lib/supabase';
 import { clearCart } from '../../backend/cart';
-import { createRazorpayOrder, openRazorpayCheckout } from '../../backend/razorpay';
+import { createRazorpayOrder, openRazorpayCheckout, verifyRazorpayPayment } from '../../backend/razorpay';
 import { deductOrderItems } from '../../backend/orders';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
@@ -162,7 +162,7 @@ const CheckoutPage = () => {
 
         // Step 2: Open Razorpay checkout
         const paymentResult = await openRazorpayCheckout({
-          key: orderData.key_id,
+          key: orderData.key_id || import.meta.env.VITE_RAZORPAY_KEY_ID,
           amount: orderData.amount,
           currency: orderData.currency,
           order_id: orderData.order_id,
@@ -181,7 +181,14 @@ const CheckoutPage = () => {
           container: '#razorpay-embed-container',
         });
 
-        // Step 3: Save order to Supabase
+        // Step 3: Verify Razorpay payment signature securely on backend
+        await verifyRazorpayPayment(
+          paymentResult.razorpay_order_id,
+          paymentResult.razorpay_payment_id,
+          paymentResult.razorpay_signature
+        );
+
+        // Step 4: Save order to Supabase
         await saveOrder(paymentMethod, paymentResult.razorpay_payment_id, paymentResult.razorpay_order_id);
       }
     } catch (err) {

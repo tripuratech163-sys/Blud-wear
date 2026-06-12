@@ -347,3 +347,105 @@
   color: #666;
 }
 
+/* --- Progress Step Indicator --- */
+.c-step-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid #eaeaea;
+  background-color: #fff;
+  position: relative;
+}
+
+.c-step-indicator::before {
+  content: "";
+  position: absolute;
+  top: 32px; /* Vertically centered with the circle dots */
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background-color: #eaeaea;
+  z-index: 0;
+}
+
+.c-step-dot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.c-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #bbb;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.c-step-dot span {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: all 0.3s ease;
+}
+
+/* Active Step Styling */
+.c-step-dot.active .c-dot {
+  border-color: #000;
+  background-color: #000;
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.c-step-dot.active span {
+  color: #000;
+}
+
+/* Completed Step Styling */
+.c-step-dot.done .c-dot {
+  border-color: #000;
+  background-color: #000;
+  color: #fff;
+}
+
+.c-step-dot.done span {
+  color: #666;
+}
+
+/* --- Summary Price Display --- */
+.c-summary-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.c-summary-price small {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.c-summary-price strong {
+  font-size: 1.2rem;
+  color: #000;
+  font-weight: 800;
+}
+
+
+

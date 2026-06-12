@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { adminFetchOrders, adminUpdateOrderStatus, adminBookShiprocket } from '../../backend/admin';
 import { formatPrice } from '../../utils/helpers';
 import { supabase } from '../../lib/supabase';
+import { restockOrderItems } from '../../backend/orders';
 
 const OrdersList = () => {
   const [orders, setOrders] = useState([]);
@@ -122,7 +123,6 @@ const OrdersList = () => {
     if (!window.confirm(`Confirm receipt of returned items at the warehouse for order ${order.id.slice(0, 8)}...? This will restock the inventory and set the payment status to Refund Pending.`)) return;
 
     try {
-      const { restockOrderItems } = await import('../../backend/orders');
       
       const isPaid = order.payment_status?.toLowerCase() === 'paid';
       const { data, error } = await supabase

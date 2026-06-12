@@ -76,3 +76,32 @@ function initiateCheckout(resolve, reject, options) {
 
   rzp.open();
 }
+
+/**
+ * Step 3: Verify the payment signature on the backend (Edge Function)
+ */
+export const verifyRazorpayPayment = async (razorpayOrderId, razorpayPaymentId, razorpaySignature) => {
+  const response = await fetch(
+    `${SUPABASE_URL}/functions/v1/verify-razorpay-payment`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify({
+        razorpay_order_id: razorpayOrderId,
+        razorpay_payment_id: razorpayPaymentId,
+        razorpay_signature: razorpaySignature,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.error || "Failed to verify Razorpay payment");
+  }
+
+  return response.json();
+};

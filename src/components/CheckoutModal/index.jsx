@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { supabase } from '../../lib/supabase';
 import { clearCart } from '../../backend/cart';
-import { createRazorpayOrder, openRazorpayCheckout } from '../../backend/razorpay';
+import { createRazorpayOrder, openRazorpayCheckout, verifyRazorpayPayment } from '../../backend/razorpay';
+import { deductOrderItems } from '../../backend/orders';
 import './CheckoutModal.css';
 
 const CheckoutModal = ({ isOpen, onClose }) => {
@@ -124,7 +125,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
       );
 
       const paymentResult = await openRazorpayCheckout({
-        key: orderData.key_id,
+        key: orderData.key_id || import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: orderData.amount,
         currency: orderData.currency,
         order_id: orderData.order_id,
@@ -147,7 +148,15 @@ const CheckoutModal = ({ isOpen, onClose }) => {
         },
         container: '#razorpay-embed-container',
       });
-      // Step 3: Save order to Supabase after successful payment
+      
+      // Step 3: Verify Razorpay payment signature securely on backend
+      await verifyRazorpayPayment(
+        paymentResult.razorpay_order_id,
+        paymentResult.razorpay_payment_id,
+        paymentResult.razorpay_signature
+      );
+
+      // Step 4: Save order to Supabase after successful payment
       await saveOrder(method === 'upi' ? 'UPI' : method === 'card' ? 'Card' : 'Netbanking', paymentResult.razorpay_payment_id, paymentResult.razorpay_order_id);
 
     } catch (err) {
@@ -217,7 +226,6 @@ const CheckoutModal = ({ isOpen, onClose }) => {
 
     // Deduct stock in inventory
     try {
-      const { deductOrderItems } = await import('../../backend/orders');
       await deductOrderItems(orderItemsPayload);
     } catch (deductErr) {
       console.error("Failed to automatically deduct inventory stock:", deductErr);
