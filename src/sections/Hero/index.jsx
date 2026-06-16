@@ -17,8 +17,8 @@ const Hero = () => {
           Uncompromising luxury athleisure for the modern warrior.
         </p>
         <div className="hero-actions">
-          <a href="#collection" className="btn btn-primary">Shop Collection</a>
-          <a href="#about" className="btn btn-outline">Our Story</a>
+          <a href="#collection" className="btn btn-primary">ACQUIRE GEAR</a>
+          <a href="#about" className="btn btn-outline">THE BLOODLINE</a>
         </div>
       </div>
     </section>

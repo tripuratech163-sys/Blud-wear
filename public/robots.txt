@@ -1,8 +1,10 @@
 User-agent: *
 Allow: /
-Disallow: /admin
-Disallow: /checkout
-Disallow: /cart
-Disallow: /orders
 
-Sitemap: https://www.bludwear.com/sitemap.xml
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://bludwear.com/sitemap.xml

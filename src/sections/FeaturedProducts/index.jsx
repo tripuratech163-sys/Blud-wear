@@ -25,7 +25,7 @@ const FeaturedProducts = () => {
             if (women[i]) alternating.push(women[i]);
           }
           
-          // Show first 4 as "New Arrivals"
+          // Show first 4 as "Forged Innovations"
           setProducts(alternating.slice(0, 4));
         }
       } catch (err) {
@@ -51,7 +51,7 @@ const FeaturedProducts = () => {
     <section id="collection" className="featured-products">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">New Arrivals</h2>
+          <h2 className="section-title">FORGED INNOVATIONS</h2>
           <Link to="/collection" className="view-all">View All &rarr;</Link>
         </div>
 
@@ -71,7 +71,7 @@ const FeaturedProducts = () => {
                   )}
                   <img src={productImage} alt={product.name} className="product-image" loading="lazy" decoding="async" />
                   <div className="product-overlay">
-                    <span className="add-to-cart">View Product</span>
+                    <span className="add-to-cart">ACQUIRE GEAR</span>
                   </div>
                 </div>
                 <div className="product-info">

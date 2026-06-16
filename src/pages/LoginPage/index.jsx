@@ -194,12 +194,12 @@ const LoginPage = () => {
               </div>
 
               <h1 className="login-title">
-                {isLogin ? 'Welcome Back' : 'Create Account'}
+                {isLogin ? 'ENTER THE BLOODLINE' : 'Create Account'}
               </h1>
               <p className="login-subtitle">
                 {isLogin
-                  ? 'Sign in to access your BludWear account.'
-                  : 'Join the bloodline. Create your account below.'}
+                  ? 'ACCESS SECURED. VERIFY IDENTITY.'
+                  : 'NO COMPROMISES. ENLIST BELOW.'}
               </p>
 
               <form className="auth-form" onSubmit={handleSubmit}>
@@ -215,6 +215,7 @@ const LoginPage = () => {
                       required={authMethod === 'email'}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
+                      maxLength="100"
                     />
                   </div>
                 )}
@@ -229,6 +230,7 @@ const LoginPage = () => {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        maxLength="150"
                       />
                     </div>
                     <div className="input-group">
@@ -239,6 +241,7 @@ const LoginPage = () => {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        maxLength="100"
                       />
                     </div>
                     {isLogin && (
@@ -262,6 +265,7 @@ const LoginPage = () => {
                           disabled={otpSent}
                           value={phone.replace(/^\+91/, '')}
                           onChange={(e) => setPhone('+91' + e.target.value.replace(/\D/g, '').slice(0, 10))}
+                          maxLength="15"
                           style={{ flex: 1, marginBottom: 0 }}
                         />
                       </div>
@@ -275,6 +279,7 @@ const LoginPage = () => {
                           required
                           value={otp}
                           onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                          maxLength="6"
                           style={{ letterSpacing: '0.5rem', textAlign: 'center', fontSize: '1.25rem', fontWeight: 'bold' }}
                         />
                       </div>

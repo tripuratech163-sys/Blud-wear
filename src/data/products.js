@@ -176,12 +176,21 @@ export const createProductSlug = (product) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
+export const optimizeImageUrl = (url, width = 600) => {
+  if (!url) return url;
+  // If it's a Supabase storage URL, wrap it with wsrv.nl proxy for resizing and WebP conversion
+  if (url.includes('supabase.co/storage/v1/object/public/')) {
+    return `https://wsrv.nl/?url=${encodeURIComponent(url)}&w=${width}&output=webp&q=80`;
+  }
+  return url;
+};
+
 export const getProductImages = (product) => {
   if (Array.isArray(product.images) && product.images.length > 0) {
-    return product.images;
+    return product.images.map(img => optimizeImageUrl(img));
   }
 
-  return product.image ? [product.image] : [];
+  return product.image ? [optimizeImageUrl(product.image)] : [];
 };
 
 export const mergeLocalProductImages = (productsToMerge) =>

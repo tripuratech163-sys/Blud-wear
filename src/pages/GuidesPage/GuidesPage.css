@@ -15,6 +15,25 @@
 /* List View */
 .guides-list-header {
   margin-bottom: 4rem;
+  position: relative;
+}
+
+.guides-list-header::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  background-image: url('https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Home%20Page/1.jpeg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.05;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .guides-list-tag {
@@ -23,6 +42,8 @@
   font-weight: 700;
   letter-spacing: 4px;
   text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 
 .guides-list-header h1 {
@@ -30,6 +51,8 @@
   font-weight: 900;
   letter-spacing: 2px;
   margin: 0.5rem 0 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .guides-list-header p {
@@ -38,6 +61,8 @@
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.5;
+  position: relative;
+  z-index: 1;
 }
 
 .guides-grid {
@@ -70,15 +95,19 @@
 }
 
 .guide-card-img {
-  height: 250px;
+  height: 350px;
   overflow: hidden;
   border-bottom: 1px solid #1a1a1a;
+  background-color: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .guide-card-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.5s ease;
 }
 
@@ -200,6 +229,10 @@
   overflow: hidden;
   border: 1px solid #1a1a1a;
   margin-bottom: 3.5rem;
+  background-color: #050505;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 768px) {
@@ -212,7 +245,7 @@
 .guide-banner img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .guide-content-wrapper {

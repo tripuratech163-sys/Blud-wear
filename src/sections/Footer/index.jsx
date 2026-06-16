@@ -15,7 +15,7 @@ const Footer = () => {
             />
             <span>BLUDWEAR</span>
           </div>
-          <p className="footer-tagline">Forged in Blud and sweat.</p>
+          <p className="footer-tagline">FORGED FOR THE MODERN WARRIOR.</p>
           <div className="footer-contact">
             <a href="mailto:wearblud@gamil.com">
               <span className="contact-icon">@</span>
@@ -31,7 +31,7 @@ const Footer = () => {
         <div className="footer-links">
           <div className="link-group">
             <h3>Shop</h3>
-            <Link to="/collection">New Arrivals</Link>
+            <Link to="/collection">LATEST ARSENAL</Link>
             <Link to="/collection">Outerwear</Link>
             <Link to="/collection">Bottoms</Link>
             <Link to="/collection">Accessories</Link>

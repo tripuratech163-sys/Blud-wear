@@ -56,28 +56,28 @@ const Navbar = () => {
             <line x1="3" y1="18" x2="21" y2="18"></line>
           </svg>
         </div>
-        
+
         <div className="navbar-logo">
           <Link to="/">
             {/* Replace the URL with your Supabase logo URL */}
-            <img 
-              src="https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Home%20Page/1.jpeg" 
-              alt="BludWear" 
+            <img
+              src="https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Home%20Page/1.jpeg"
+              alt="BludWear"
               className="logo-img"
-              onError={(e) => e.target.style.display = 'none'}  
+              onError={(e) => e.target.style.display = 'none'}
             />
             <span className="logo-text">BLUDWEAR</span>
           </Link>
         </div>
-       
+
         <div className="navbar-links">
           <Link to="/">Home</Link>
           <Link to="/collection?category=men">Men <span className="chevron">&#8964;</span></Link>
           <Link to="/collection?category=women">Women <span className="chevron">&#8964;</span></Link>
-          <Link to="/collection">Collection</Link>
-          <a href="/#collection">New Arrivals <span className="fire">🔥</span></a>
+          <Link to="/collection">COLLECTION</Link>
+          <a href="/#collection">LATEST ARSENAL <span className="fire">🔥</span></a>
         </div>
-        
+
         <div className="navbar-actions">
           <button className="icon-btn">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -85,12 +85,12 @@ const Navbar = () => {
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
           </button>
-          
+
           <button className="icon-btn" onClick={() => setIsProfileOpen(true)}>
-             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-               <circle cx="12" cy="7" r="4"></circle>
-             </svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
           </button>
 
           <button className="icon-btn badge-btn" onClick={() => navigate('/wishlist')}>
@@ -111,9 +111,9 @@ const Navbar = () => {
         </div>
       </div>
 
-      <UserProfileDrawer 
-        isOpen={isProfileOpen} 
-        onClose={() => setIsProfileOpen(false)} 
+      <UserProfileDrawer
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
       />
     </nav>
   );

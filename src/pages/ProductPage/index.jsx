@@ -566,11 +566,11 @@ const ProductPage = () => {
                   <span className="pulse-dot"></span>
                   <p>
                     {isOutOfStock ? (
-                      "Sold out. Join the waitlist for the next exclusive release."
+                      "OUT OF COMMISSION. JOIN THE BLOODLINE FOR RESTOCK INTEL."
                     ) : currentStock > 0 && currentStock <= 5 ? (
-                      `⚡ LOW STOCK: Only ${currentStock} left! Order immediately.`
+                      `CRITICAL STOCK: ${currentStock} UNITS REMAINING. ACTIVATE IMMEDIATELY.`
                     ) : (
-                      "🔥 EXCLUSIVE: Part of the premium Bludline core drop. 14 people viewing now."
+                      "RESTRICTED ACCESS: CORE BLUDLINE DEPLOYMENT. 14 VIEWING NOW."
                     )}
                   </p>
                 </div>
@@ -581,7 +581,7 @@ const ProductPage = () => {
                   disabled={isOutOfStock}
                   style={{ backgroundColor: isOutOfStock ? '#333' : '#fff', color: isOutOfStock ? '#888' : '#000', cursor: isOutOfStock ? 'not-allowed' : 'pointer' }}
                 >
-                  {isOutOfStock ? 'Out of Stock' : 'Add To Cart'}
+                  {isOutOfStock ? 'OUT OF COMMISSION' : 'EQUIP NOW'}
                 </button>
                 {cartStatus && <p className="product-cart-status">{cartStatus}</p>}
 
@@ -689,6 +689,7 @@ const ProductPage = () => {
                           placeholder="e.g. Arjun Sharma" 
                           value={reviewName} 
                           onChange={(e) => setReviewName(e.target.value)} 
+                          maxLength="100"
                           required 
                         />
                       </div>
@@ -699,6 +700,7 @@ const ProductPage = () => {
                           placeholder="e.g. arjun@example.com" 
                           value={reviewEmail} 
                           onChange={(e) => setReviewEmail(e.target.value)} 
+                          maxLength="150"
                           required 
                         />
                       </div>
@@ -728,6 +730,7 @@ const ProductPage = () => {
                         placeholder="e.g. Premium fit and quality!" 
                         value={reviewTitle} 
                         onChange={(e) => setReviewTitle(e.target.value)} 
+                        maxLength="150"
                       />
                     </div>
 
@@ -738,6 +741,7 @@ const ProductPage = () => {
                         placeholder="Write your comments here..." 
                         value={reviewBody} 
                         onChange={(e) => setReviewBody(e.target.value)} 
+                        maxLength="2000"
                         required
                       ></textarea>
                     </div>

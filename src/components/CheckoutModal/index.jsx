@@ -300,6 +300,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                         placeholder="10-digit mobile number"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
+                        maxLength="15"
                         autoFocus
                       />
                     </div>
@@ -344,18 +345,21 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                       type="text" placeholder="Full Name *"
                       value={shipping.name}
                       onChange={e => setShipping({ ...shipping, name: e.target.value })}
+                      maxLength="100"
                       required
                     />
                     <input
                       type="tel" placeholder="Mobile Number *"
                       value={shipping.phone}
                       onChange={e => setShipping({ ...shipping, phone: e.target.value })}
+                      maxLength="15"
                       required
                     />
                     <input
                       type="text" placeholder="Pincode *"
                       value={shipping.pincode}
                       onChange={e => setShipping({ ...shipping, pincode: e.target.value })}
+                      maxLength="10"
                       required
                       style={{ gridColumn: 'span 2' }}
                     />
@@ -363,6 +367,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                       type="text" placeholder="House / Flat No., Street, Area *"
                       value={shipping.address}
                       onChange={e => setShipping({ ...shipping, address: e.target.value })}
+                      maxLength="300"
                       required
                       style={{ gridColumn: 'span 2' }}
                     />
@@ -370,12 +375,14 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                       type="text" placeholder="City *"
                       value={shipping.city}
                       onChange={e => setShipping({ ...shipping, city: e.target.value })}
+                      maxLength="100"
                       required
                     />
                     <input
                       type="text" placeholder="State *"
                       value={shipping.state}
                       onChange={e => setShipping({ ...shipping, state: e.target.value })}
+                      maxLength="100"
                       required
                     />
                   </div>

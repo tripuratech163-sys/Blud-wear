@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
+import { optimizeImageUrl } from '../../data/products';
 import './GuidesPage.css';
 
 const guidesData = [
@@ -10,7 +11,7 @@ const guidesData = [
     title: "How to Choose the Right Fabric for Cold-Weather Training",
     metaTitle: "Cold-Weather Training Fabrics Guide | BludWear",
     metaDesc: "Discover the best fabric and weights for cold-weather workout gear. Learn about GSM, thermal layering, and moisture-wicking fleece structures.",
-    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7642.jpg",
+    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Black%20Short/DSC_7652.jpg",
     category: "FABRICS",
     readTime: "5 min read",
     summary: "Heavyweight hoodies vs lightweight thermals. Understanding fabric thickness (GSM) and active moisture transfer are key to staying warm without overheating.",
@@ -64,7 +65,7 @@ const guidesData = [
     title: "The Science of Compression Gear for High-Intensity Workouts",
     metaTitle: "Science of Athletic Compression Gear | BludWear",
     metaDesc: "Explore how compression leggings and tops improve performance, stabilize muscles, and reduce post-workout soreness through active circulation support.",
-    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression/DSC_7632.jpg",
+    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Red%20Full/DSC_7544.jpg",
     category: "SPORTS SCIENCE",
     readTime: "6 min read",
     summary: "How tight is too tight? Learn the circulatory science behind active graduated compression and its verified benefits on athletic performance.",
@@ -147,7 +148,7 @@ const GuidesPage = () => {
             </header>
 
             <div className="guide-banner">
-              <img src={activeGuide.image} alt={activeGuide.title} />
+              <img src={optimizeImageUrl(activeGuide.image, 1200)} alt={activeGuide.title} />
             </div>
 
             <div className="guide-content-wrapper">
@@ -167,7 +168,7 @@ const GuidesPage = () => {
               {guidesData.map((g) => (
                 <div key={g.slug} className="guide-card">
                   <div className="guide-card-img">
-                    <img src={g.image} alt={g.title} />
+                    <img src={optimizeImageUrl(g.image, 600)} alt={g.title} />
                   </div>
                   <div className="guide-card-content">
                     <span className="guide-card-category">{g.category}</span>

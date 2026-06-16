@@ -277,7 +277,7 @@ const CheckoutPage = () => {
               <form onSubmit={handleSendOtp} className="checkout-form">
                 <div className="input-group">
                   <label>Mobile Number (with country code)</label>
-                  <input type="tel" placeholder="+919876543210" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+                  <input type="tel" placeholder="+919876543210" value={phone} onChange={(e) => setPhone(e.target.value)} maxLength="15" required />
                 </div>
                 <button type="submit" className="btn-primary">Send OTP</button>
                 <div className="login-link">
@@ -288,7 +288,7 @@ const CheckoutPage = () => {
               <form onSubmit={handleVerifyOtp} className="checkout-form">
                 <div className="input-group">
                   <label>Enter 6-digit OTP</label>
-                  <input type="text" placeholder="123456" value={otp} onChange={(e) => setOtp(e.target.value)} required />
+                  <input type="text" placeholder="123456" value={otp} onChange={(e) => setOtp(e.target.value)} maxLength="6" required />
                 </div>
                 <button type="submit" className="btn-primary">Verify & Proceed</button>
               </form>
@@ -325,31 +325,31 @@ const CheckoutPage = () => {
                 <div className="form-row">
                   <div className="input-group">
                     <label>Full Name *</label>
-                    <input type="text" name="name" required value={shipping.name} onChange={handleShippingChange} />
+                    <input type="text" name="name" required value={shipping.name} onChange={handleShippingChange} maxLength="100" />
                   </div>
                   <div className="input-group">
                     <label>Mobile Number *</label>
-                    <input type="tel" name="phone" required value={shipping.phone} onChange={handleShippingChange} />
+                    <input type="tel" name="phone" required value={shipping.phone} onChange={handleShippingChange} maxLength="15" />
                   </div>
                 </div>
                 
                 <div className="input-group">
                   <label>Address *</label>
-                  <input type="text" name="address" required value={shipping.address} onChange={handleShippingChange} placeholder="House/Flat No., Street, Area" />
+                  <input type="text" name="address" required value={shipping.address} onChange={handleShippingChange} placeholder="House/Flat No., Street, Area" maxLength="300" />
                 </div>
                 
                 <div className="form-row three-cols">
                   <div className="input-group">
                     <label>City *</label>
-                    <input type="text" name="city" required value={shipping.city} onChange={handleShippingChange} />
+                    <input type="text" name="city" required value={shipping.city} onChange={handleShippingChange} maxLength="100" />
                   </div>
                   <div className="input-group">
                     <label>State *</label>
-                    <input type="text" name="state" required value={shipping.state} onChange={handleShippingChange} />
+                    <input type="text" name="state" required value={shipping.state} onChange={handleShippingChange} maxLength="100" />
                   </div>
                   <div className="input-group">
                     <label>Pincode *</label>
-                    <input type="text" name="pincode" required value={shipping.pincode} onChange={handleShippingChange} />
+                    <input type="text" name="pincode" required value={shipping.pincode} onChange={handleShippingChange} maxLength="10" />
                   </div>
                 </div>
 
@@ -401,6 +401,7 @@ const CheckoutPage = () => {
                     placeholder="DISCOUNT CODE"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
+                    maxLength="20"
                     style={{
                       flex: 1,
                       backgroundColor: '#050505',

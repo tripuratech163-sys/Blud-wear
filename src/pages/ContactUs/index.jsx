@@ -62,17 +62,16 @@ const ContactUs = () => {
           <div className="contact-layout-grid">
             <div className="contact-info-block">
               <h3>HEADQUARTERS</h3>
-              <p>BLUDWEAR Inc.</p>
-              <p>123 Performance Way, Suite 100</p>
-              <p>Mumbai, MH, India</p>
+              <p>BLUDWEAR</p>
+              <p>24, Mohan Park, Near Panchal Vihar</p>
+              <p>East Delhi, Delhi, India, 110092</p>
 
               <h3>SUPPORT HOURS</h3>
               <p>Monday - Friday: 9 AM - 6 PM IST</p>
               <p>Saturday: 10 AM - 4 PM IST</p>
 
               <h3>DIRECT INQUIRIES</h3>
-              <p>Support: <a href="mailto:support@bludwear.com">support@bludwear.com</a></p>
-              <p>Business: <a href="mailto:partners@bludwear.com">partners@bludwear.com</a></p>
+              <p>Support: <a href="mailto:wearblud@gmail.com">wearblud@gmail.com</a></p>
             </div>
 
             <div className="contact-form-block">
@@ -92,6 +91,7 @@ const ContactUs = () => {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your name"
+                    maxLength="100"
                     required
                   />
                 </div>
@@ -105,6 +105,7 @@ const ContactUs = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your email"
+                    maxLength="150"
                     required
                   />
                 </div>
@@ -118,6 +119,7 @@ const ContactUs = () => {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="How can we help you?"
+                    maxLength="2000"
                     required
                   ></textarea>
                 </div>
