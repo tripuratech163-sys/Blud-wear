@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { adminFetchProducts, adminFetchOrders } from '../../backend/admin';
+import { adminFetchDashboardStats } from '../../backend/admin';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({ products: 0, orders: 0, revenue: 0 });
@@ -8,17 +8,12 @@ const Dashboard = () => {
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const [products, orders] = await Promise.all([
-          adminFetchProducts(),
-          adminFetchOrders()
-        ]);
-
-        const revenue = orders.reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
+        const data = await adminFetchDashboardStats();
 
         setStats({
-          products: products.length,
-          orders: orders.length,
-          revenue
+          products: data.productsCount,
+          orders: data.ordersCount,
+          revenue: data.revenue
         });
       } catch (err) {
         console.error("Error loading dashboard stats", err);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { adminCreateProduct, adminUpdateProduct, adminFetchProducts } from '../../backend/admin';
+import { adminCreateProduct, adminUpdateProduct, adminFetchProductById } from '../../backend/admin';
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -31,43 +31,42 @@ const ProductForm = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        setLoading(true);
+        const product = await adminFetchProductById(id);
+        if (product) {
+          const features = Array.isArray(product.key_features) ? product.key_features : [];
+          setFormData({
+            name: product.name || '',
+            price: product.price || '',
+            original_price: product.original_price || '',
+            image: product.image || '',
+            images: product.images || [],
+            description: product.description || '',
+            about_description: product.about_description || '',
+            key_features: features,
+            category: product.category || '',
+            gender: product.gender || 'men',
+            tag: product.tag || '',
+            gsm: product.gsm || '',
+            stock: product.stock || 0,
+            variants: product.variants || []
+          });
+          setImagesInput((product.images || []).join('\n'));
+          setFeaturesInput(features.join('\n'));
+        }
+      } catch (err) {
+        console.error("Failed to load product", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (isEditing) {
       loadProduct();
     }
-  }, [id]);
-
-  const loadProduct = async () => {
-    try {
-      setLoading(true);
-      const allProducts = await adminFetchProducts();
-      const product = allProducts.find(p => p.id === id);
-      if (product) {
-        const features = Array.isArray(product.key_features) ? product.key_features : [];
-        setFormData({
-          name: product.name || '',
-          price: product.price || '',
-          original_price: product.original_price || '',
-          image: product.image || '',
-          images: product.images || [],
-          description: product.description || '',
-          about_description: product.about_description || '',
-          key_features: features,
-          category: product.category || '',
-          gender: product.gender || 'men',
-          tag: product.tag || '',
-          gsm: product.gsm || '',
-          stock: product.stock || 0,
-          variants: product.variants || []
-        });
-        setImagesInput((product.images || []).join('\n'));
-        setFeaturesInput(features.join('\n'));
-      }
-    } catch (err) {
-      console.error("Failed to load product", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [id, isEditing]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

@@ -40,6 +40,7 @@ import AdminVideosList from './pages/Admin/VideosList';
 // Global Components
 import CartDrawer from './components/CartDrawer';
 import CheckoutModal from './components/CheckoutModal';
+import MobileBottomDock from './components/MobileBottomDock';
 import { useCart } from './context/CartContext';
 import VideoGallery from './sections/VideoGallery';
 
@@ -96,6 +97,7 @@ function App() {
       </Routes>
       <CartDrawer />
       <CheckoutModal isOpen={isCheckoutOpen} onClose={closeCheckout} />
+      <MobileBottomDock />
     </>
   );
 }

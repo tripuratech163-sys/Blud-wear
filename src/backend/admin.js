@@ -15,6 +15,29 @@ export const adminFetchProducts = async () => {
   return data;
 };
 
+export const adminFetchProductsList = async () => {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  const { data, error } = await supabase
+    .from('products')
+    .select('id, name, price, category, gender, gsm, image, created_at')
+    .order('created_at', { ascending: false });
+  
+  if (error) throw error;
+  return data;
+};
+
+export const adminFetchProductById = async (productId) => {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', productId)
+    .single();
+  
+  if (error) throw error;
+  return data;
+};
+
 export const adminCreateProduct = async (productData) => {
   if (!supabase) throw new Error('Supabase client not initialized');
   const { data, error } = await supabase
@@ -62,11 +85,33 @@ export const adminFetchOrders = async () => {
   // but for a simple list, just the orders table is fine.
   const { data, error } = await supabase
     .from('orders')
-    .select('*, order_items(*, products(*))')
+    .select('*, order_items(*, products(id, name))')
     .order('created_at', { ascending: false });
     
   if (error) throw error;
   return data;
+};
+
+export const adminFetchDashboardStats = async () => {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  
+  const [productsRes, ordersRes] = await Promise.all([
+    supabase.from('products').select('id', { count: 'exact', head: true }),
+    supabase.from('orders').select('total_amount')
+  ]);
+  
+  if (productsRes.error) throw productsRes.error;
+  if (ordersRes.error) throw ordersRes.error;
+  
+  const productsCount = productsRes.count || 0;
+  const ordersCount = ordersRes.data?.length || 0;
+  const revenue = (ordersRes.data || []).reduce((sum, order) => sum + Number(order.total_amount || 0), 0);
+  
+  return {
+    productsCount,
+    ordersCount,
+    revenue
+  };
 };
 
 export const adminUpdateOrderStatus = async (orderId, newStatus) => {

@@ -322,3 +322,10 @@
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}

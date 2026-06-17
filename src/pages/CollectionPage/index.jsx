@@ -45,18 +45,10 @@ const ProductCard = ({ product, colorVariant }) => {
 const CollectionPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
-  const [activeTab, setActiveTab] = useState(categoryParam || 'all');
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Listen for URL query param changes
-  useEffect(() => {
-    if (categoryParam === 'men' || categoryParam === 'women') {
-      setActiveTab(categoryParam);
-    } else {
-      setActiveTab('all');
-    }
-  }, [categoryParam]);
+  const activeTab = categoryParam === 'men' || categoryParam === 'women' ? categoryParam : 'all';
 
   // Fetch products exclusively from Supabase
   useEffect(() => {
@@ -76,10 +68,10 @@ const CollectionPage = () => {
   }, []);
 
   const handleTabClick = (tab) => {
-    setActiveTab(tab);
-    // Remove the category lock if they interact with tabs manually
-    if (categoryParam) {
+    if (tab === 'all') {
       setSearchParams({});
+    } else {
+      setSearchParams({ category: tab });
     }
   };
 
@@ -128,6 +120,71 @@ const CollectionPage = () => {
     : activeTab === 'women' 
       ? "Women's Collection" 
       : "All Products";
+
+  // Dynamic SEO Title, Meta Description and ItemList JSON-LD Schema
+  useEffect(() => {
+    // 1. Dynamic Page Title
+    document.title = `${tabLabel} | BludWear Athleisure`;
+
+    // 2. Dynamic Meta Description
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", `Explore the BludWear ${tabLabel}. Premium luxury athleisure engineered for performance and styled with industrial aesthetics.`);
+    }
+
+    // 3. Dynamic JSON-LD ItemList Schema
+    if (flattenedProducts.length === 0) return;
+
+    let schemaScript = document.getElementById('jsonld-collection-schema');
+    if (!schemaScript) {
+      schemaScript = document.createElement('script');
+      schemaScript.id = 'jsonld-collection-schema';
+      schemaScript.type = 'application/ld+json';
+      document.head.appendChild(schemaScript);
+    }
+
+    const itemListElement = flattenedProducts.map((item, index) => {
+      const baseImage = getProductImages(item.product)[0] || '/placeholder.png';
+      const title = item.colorVariant ? `${item.product.name} - ${item.colorVariant.color}` : item.product.name;
+      const image = item.colorVariant && item.colorVariant.image && item.colorVariant.image.trim() ? item.colorVariant.image.trim() : baseImage;
+      const price = item.colorVariant && item.colorVariant.price ? item.colorVariant.price : item.product.price;
+      const url = `${window.location.origin}/products/${createProductSlug(item.product)}${item.colorVariant ? `?variant=${encodeURIComponent(item.colorVariant.color)}` : ''}`;
+      const cleanPrice = String(price).replace(/[^0-9.-]+/g,"");
+
+      return {
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": title,
+        "url": url,
+        "image": image,
+        "offers": {
+          "@type": "Offer",
+          "price": cleanPrice,
+          "priceCurrency": "INR",
+          "itemCondition": "https://schema.org/NewCondition",
+          "availability": "https://schema.org/InStock"
+        }
+      };
+    });
+
+    const schemaData = {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": tabLabel,
+      "numberOfItems": flattenedProducts.length,
+      "itemListElement": itemListElement
+    };
+
+    schemaScript.textContent = JSON.stringify(schemaData);
+
+    return () => {
+      // Cleanup schema on unmount
+      const scriptToRemove = document.getElementById('jsonld-collection-schema');
+      if (scriptToRemove) {
+        scriptToRemove.remove();
+      }
+    };
+  }, [flattenedProducts, tabLabel]);
 
   return (
     <div className="col-page">

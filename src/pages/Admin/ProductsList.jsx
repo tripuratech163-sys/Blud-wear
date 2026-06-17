@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { adminFetchProducts, adminDeleteProduct } from '../../backend/admin';
+import { adminFetchProductsList, adminDeleteProduct } from '../../backend/admin';
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -8,20 +8,19 @@ const ProductsList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await adminFetchProductsList();
+        setProducts(data || []);
+      } catch (err) {
+        console.error("Failed to load products", err);
+      } finally {
+        setLoading(false);
+      }
+    };
     loadProducts();
   }, []);
-
-  const loadProducts = async () => {
-    try {
-      setLoading(true);
-      const data = await adminFetchProducts();
-      setProducts(data || []);
-    } catch (err) {
-      console.error("Failed to load products", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this product?")) return;

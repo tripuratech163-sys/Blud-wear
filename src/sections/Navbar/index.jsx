@@ -38,6 +38,16 @@ const Navbar = () => {
   }, [user]);
 
   useEffect(() => {
+    const handleOpenMobileMenu = () => {
+      setIsProfileOpen(true);
+    };
+    window.addEventListener('open-mobile-menu', handleOpenMobileMenu);
+    return () => {
+      window.removeEventListener('open-mobile-menu', handleOpenMobileMenu);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
     };
@@ -75,7 +85,7 @@ const Navbar = () => {
           <Link to="/collection?category=men">Men <span className="chevron">&#8964;</span></Link>
           <Link to="/collection?category=women">Women <span className="chevron">&#8964;</span></Link>
           <Link to="/collection">COLLECTION</Link>
-          <a href="/#collection">LATEST ARSENAL <span className="fire">🔥</span></a>
+          <a href="/#collection">LATEST ARSENAL <span className="fire"></span></a>
         </div>
 
         <div className="navbar-actions">

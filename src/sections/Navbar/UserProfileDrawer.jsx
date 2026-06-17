@@ -51,6 +51,15 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
         </div>
         
         <div className="drawer-content">
+          {/* Mobile Category Navigation links */}
+          <div className="drawer-nav-links">
+            <Link to="/" onClick={onClose} className="drawer-nav-link">Home</Link>
+            <Link to="/collection?category=men" onClick={onClose} className="drawer-nav-link">Men</Link>
+            <Link to="/collection?category=women" onClick={onClose} className="drawer-nav-link">Women</Link>
+            <Link to="/collection" onClick={onClose} className="drawer-nav-link">Full Collection</Link>
+            <a href="/#collection" onClick={onClose} className="drawer-nav-link">Latest Arsenal 🔥</a>
+          </div>
+
           <div className="drawer-auth-intro">
             <h2>{user ? `WELCOME BACK` : `SIGN IN TO YOUR ACCOUNT`}</h2>
             <p className="drawer-rewards-text">
