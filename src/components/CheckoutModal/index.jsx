@@ -267,17 +267,29 @@ const CheckoutModal = ({ isOpen, onClose }) => {
 
         <div className="checkout-modal-body">
 
-          {/* Order Summary Block */}
+          {/* Order Summary Block - Detailed Price Breakup */}
           <div className="c-summary-block">
-            <div className="c-summary-row">
+            <div className="c-summary-header">
               <span>Order summary ({cartItems.length} item{cartItems.length !== 1 && 's'})</span>
-              <div className="c-summary-price">
-                <small>Base: ₹{basePrice.toFixed(2)} + GST 18%</small>
-                <strong>₹{finalTotal.toFixed(2)}</strong>
-              </div>
             </div>
-            <div className="c-free-delivery">
-              <span>🚚</span> <span>Free Delivery</span>
+            <div className="c-price-breakup">
+              <div className="c-price-row">
+                <span>Item Total (MRP)</span>
+                <span>₹{basePrice.toFixed(2)}</span>
+              </div>
+              <div className="c-price-row c-price-gst">
+                <span>GST (18%)</span>
+                <span>+ ₹{gstAmount.toFixed(2)}</span>
+              </div>
+              <div className="c-price-row c-price-delivery">
+                <span>🚚 Delivery Charges</span>
+                <span className="c-free-tag">FREE</span>
+              </div>
+              <div className="c-price-divider" />
+              <div className="c-price-row c-price-total">
+                <span>Total Payable</span>
+                <span>₹{finalTotal.toFixed(2)}</span>
+              </div>
             </div>
           </div>
 
@@ -424,8 +436,13 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                       <p>{shipping.address}, {shipping.city} - {shipping.pincode}</p>
                     </div>
                     <div className="c-payment-total">
-                      <span>Total to pay</span>
-                      <strong>₹{finalTotal.toFixed(2)}</strong>
+                      <div className="c-payment-breakup">
+                        <div className="c-pb-row"><span>Item Total</span><span>₹{basePrice.toFixed(2)}</span></div>
+                        <div className="c-pb-row"><span>GST (18%)</span><span>+ ₹{gstAmount.toFixed(2)}</span></div>
+                        <div className="c-pb-row"><span>Delivery</span><span className="c-free-tag">FREE</span></div>
+                        <div className="c-pb-divider" />
+                        <div className="c-pb-row c-pb-total"><span>Total to pay</span><strong>₹{finalTotal.toFixed(2)}</strong></div>
+                      </div>
                     </div>
                     <div className="c-payment-options-grid">
                       <div 

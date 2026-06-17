@@ -427,7 +427,118 @@
   color: #666;
 }
 
-/* --- Summary Price Display --- */
+/* --- Summary Header --- */
+.c-summary-header {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+  color: #111;
+}
+
+/* --- Price Breakup Table --- */
+.c-price-breakup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.c-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.c-price-gst span:last-child {
+  color: #e67e00;
+  font-weight: 600;
+}
+
+.c-price-delivery span:last-child {
+  color: #1a8c3f;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.c-free-tag {
+  color: #1a8c3f !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.c-price-divider {
+  border: none;
+  border-top: 1px dashed #ddd;
+  margin: 0.35rem 0;
+}
+
+.c-price-total {
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+  padding-top: 0.1rem;
+}
+
+.c-price-total span:first-child {
+  font-weight: 700;
+  color: #000;
+}
+
+.c-price-total span:last-child {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #000;
+}
+
+/* --- Payment Step Breakup --- */
+.c-payment-total {
+  background: #f7f7f7;
+  border-radius: 8px;
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+  border: 1px solid #eaeaea;
+}
+
+.c-payment-breakup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.c-pb-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  color: #555;
+}
+
+.c-pb-divider {
+  border: none;
+  border-top: 1px dashed #ccc;
+  margin: 0.2rem 0;
+}
+
+.c-pb-total {
+  font-size: 1rem !important;
+  color: #000 !important;
+}
+
+.c-pb-total span {
+  font-weight: 700;
+  color: #000;
+}
+
+.c-pb-total strong {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #000;
+}
+
+/* --- Old summary price compat (kept for safety) --- */
 .c-summary-price {
   display: flex;
   flex-direction: column;
@@ -446,6 +557,3 @@
   color: #000;
   font-weight: 800;
 }
-
-
-
