@@ -105,19 +105,22 @@ serve(async (req) => {
       const firstName = nameParts[0] || "Guest";
       const lastName = nameParts.slice(1).join(" ") || "Customer";
 
+      // Shiprocket requires a short alphanumeric order_id (not a UUID)
+      const shortOrderId = `BW-${order.id.replace(/-/g, "").slice(0, 10).toUpperCase()}`;
+
       const shiprocketPayload = {
-        order_id: order.id,
+        order_id: shortOrderId,
         order_date: new Date(order.created_at).toISOString().slice(0, 19).replace("T", " "),
         pickup_location: "Primary",
         billing_customer_name: firstName,
         billing_last_name: lastName,
         billing_address: addressString,
         billing_city: order.shipping_city || "Mumbai",
-        billing_pincode: order.shipping_pincode || "400001",
+        billing_pincode: String(order.shipping_pincode || "400001"),
         billing_state: order.shipping_state || "Maharashtra",
         billing_country: "India",
         billing_email: order.contact_info?.email || "customer@example.com",
-        billing_phone: order.shipping_phone || "9999999999",
+        billing_phone: String(order.shipping_phone || "9999999999"),
         shipping_is_billing: true,
         order_items: orderItems,
         payment_method: order.payment_method === "COD" ? "COD" : "Prepaid",
@@ -127,6 +130,8 @@ serve(async (req) => {
         height: dimensions?.height || 10,
         weight: weight
       };
+
+      console.log("Shiprocket payload:", JSON.stringify(shiprocketPayload));
 
       // Step C: Book order on Shiprocket
       const bookingRes = await fetch("https://apiv2.shiprocket.in/v1/external/orders/create/adhoc", {
@@ -144,10 +149,18 @@ serve(async (req) => {
       }
 
       const bookingData = await bookingRes.json();
-      shiprocket_order_id = String(bookingData.order_id);
-      shiprocket_shipment_id = String(bookingData.shipment_id);
-      shiprocket_status = "Pickup Scheduled";
-      shiprocket_awb = bookingData.awb_code || "";
+      console.log("Shiprocket booking response:", JSON.stringify(bookingData));
+
+      // Shiprocket returns order_id and shipment_id at the top level
+      // or sometimes nested inside payload.order_id
+      shiprocket_order_id = String(
+        bookingData.order_id ?? bookingData.payload?.order_id ?? ""
+      );
+      shiprocket_shipment_id = String(
+        bookingData.shipment_id ?? bookingData.payload?.shipment_id ?? ""
+      );
+      shiprocket_status = bookingData.status || "Pickup Scheduled";
+      shiprocket_awb = bookingData.awb_code ?? bookingData.payload?.awb_code ?? "";
     }
 
     // 2. Update the order in Supabase with booking details

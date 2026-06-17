@@ -484,7 +484,7 @@ const OrdersList = () => {
                             <div style={{ borderLeft: '1px solid #222', paddingLeft: '2rem' }}>
                               <h4 style={{ margin: '0 0 0.5rem 0', color: '#fff', fontSize: '0.9rem', letterSpacing: '1px' }}>SHIPROCKET SHIPPING</h4>
                               
-                              {order.shiprocket_shipment_id ? (
+                              {order.shiprocket_shipment_id && order.shiprocket_shipment_id !== 'undefined' ? (
                                 <div style={{ fontSize: '0.85rem', color: '#aaa', lineHeight: '1.6' }}>
                                   <p style={{ margin: '0 0 0.25rem 0' }}><strong>Shiprocket Order ID:</strong> {order.shiprocket_order_id}</p>
                                   <p style={{ margin: '0 0 0.25rem 0' }}><strong>Shipment ID:</strong> {order.shiprocket_shipment_id}</p>
