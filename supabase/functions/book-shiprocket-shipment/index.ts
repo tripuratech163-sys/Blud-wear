@@ -123,7 +123,7 @@ serve(async (req) => {
         payment_method: order.payment_method === "COD" ? "COD" : "Prepaid",
         sub_total: Number(order.total_amount) || 0,
         length: dimensions?.length || 10,
-        width: dimensions?.width || 10,
+        breadth: dimensions?.width || 10,
         height: dimensions?.height || 10,
         weight: weight
       };
