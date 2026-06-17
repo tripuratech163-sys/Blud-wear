@@ -90,13 +90,16 @@ serve(async (req) => {
 
       const authData = await authRes.json();
       const token = authData.token;
+      if (!token) {
+        throw new Error(`Shiprocket auth succeeded but no token returned. Response: ${JSON.stringify(authData)}`);
+      }
 
       // Step B: Map payload
       const orderItems = (order.order_items || []).map((item: any) => ({
         name: item.products?.name || "Product Item",
         sku: item.products?.name?.toLowerCase().replace(/[^a-z0-9]/g, "-") || "sku",
         units: item.quantity,
-        selling_price: Number(item.price_at_time.replace(/[^0-9.-]+/g, "")) || 0
+        selling_price: Number(String(item.price_at_time).replace(/[^0-9.-]+/g, "")) || 0
       }));
 
       // Map shipping address details
@@ -108,10 +111,14 @@ serve(async (req) => {
       // Shiprocket requires a short alphanumeric order_id (not a UUID)
       const shortOrderId = `BW-${order.id.replace(/-/g, "").slice(0, 10).toUpperCase()}`;
 
+      // Pickup location must EXACTLY match your warehouse name in Shiprocket dashboard
+      // Set SHIPROCKET_PICKUP_LOCATION secret if your warehouse isn't named "Primary"
+      const pickupLocation = Deno.env.get("SHIPROCKET_PICKUP_LOCATION") || "Primary";
+
       const shiprocketPayload = {
         order_id: shortOrderId,
         order_date: new Date(order.created_at).toISOString().slice(0, 19).replace("T", " "),
-        pickup_location: "Primary",
+        pickup_location: pickupLocation,
         billing_customer_name: firstName,
         billing_last_name: lastName,
         billing_address: addressString,
@@ -143,16 +150,17 @@ serve(async (req) => {
         body: JSON.stringify(shiprocketPayload)
       });
 
+      const bookingRawBody = await bookingRes.text();
+      console.log(`Shiprocket booking response [${bookingRes.status}]:`, bookingRawBody);
+
       if (!bookingRes.ok) {
-        const errBody = await bookingRes.text();
-        throw new Error(`Shiprocket Order Creation failed: ${bookingRes.status} - ${errBody}`);
+        throw new Error(`Shiprocket rejected the order (${bookingRes.status}): ${bookingRawBody}`);
       }
 
-      const bookingData = await bookingRes.json();
-      console.log("Shiprocket booking response:", JSON.stringify(bookingData));
+      const bookingData = JSON.parse(bookingRawBody);
 
       // Shiprocket returns order_id and shipment_id at the top level
-      // or sometimes nested inside payload.order_id
+      // or sometimes nested inside payload
       shiprocket_order_id = String(
         bookingData.order_id ?? bookingData.payload?.order_id ?? ""
       );
