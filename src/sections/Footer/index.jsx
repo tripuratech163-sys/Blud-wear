@@ -17,9 +17,9 @@ const Footer = () => {
           </div>
           <p className="footer-tagline">FORGED FOR THE MODERN WARRIOR.</p>
           <div className="footer-contact">
-            <a href="mailto:wearblud@gamil.com">
+            <a href="mailto:wearblud@gmail.com">
               <span className="contact-icon">@</span>
-            wearblud@gamil.com
+              wearblud@gamil.com
             </a>
             <a href="https://www.instagram.com/blud.wear?igsh=cDNwcmhxdGtjMjQ1" target="_blank" rel="noreferrer">
               <span className="contact-icon">IG</span>
@@ -27,7 +27,7 @@ const Footer = () => {
             </a>
           </div>
         </div>
-        
+
         <div className="footer-links">
           <div className="link-group">
             <h3>Shop</h3>
@@ -55,7 +55,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="footer-bottom">
         <div className="container bottom-container">
           <p>&copy; {new Date().getFullYear()} BludWear. All rights reserved.</p>
