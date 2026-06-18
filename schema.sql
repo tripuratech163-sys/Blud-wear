@@ -13,6 +13,7 @@ CREATE TABLE products (
   gender TEXT NOT NULL,
   tag TEXT,
   gsm TEXT,
+  is_featured BOOLEAN DEFAULT false,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 

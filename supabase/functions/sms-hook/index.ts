@@ -28,7 +28,7 @@ serve(async (req) => {
       throw new Error("FAST2SMS_API_KEY is not set in Supabase Secrets");
     }
 
-    // 4. Send the OTP via Fast2SMS
+    // 4. Send the OTP via Fast2SMS (Using 'q' route instead of 'otp' to bypass DLT requirements)
     const response = await fetch("https://www.fast2sms.com/dev/bulkV2", {
       method: "POST",
       headers: {
@@ -36,8 +36,9 @@ serve(async (req) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        route: "otp",
-        variables_values: otp,
+        route: "q",
+        message: `Your BludWear login OTP is ${otp}. Please do not share it with anyone.`,
+        flash: 0,
         numbers: cleanPhone
       })
     });

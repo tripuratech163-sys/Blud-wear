@@ -13,20 +13,38 @@ const FeaturedProducts = () => {
       try {
         const data = await fetchProducts();
         if (data && data.length > 0) {
-          // Filter products by gender
-          const men = data.filter(p => p.gender?.toLowerCase() === 'men');
-          const women = data.filter(p => p.gender?.toLowerCase() === 'women');
+          // Separate products by gender
+          const allMen = data.filter(p => p.gender?.toLowerCase() === 'men');
+          const allWomen = data.filter(p => p.gender?.toLowerCase() === 'women');
+
+          // Get featured products
+          const featuredMen = allMen.filter(p => p.is_featured);
+          const featuredWomen = allWomen.filter(p => p.is_featured);
+
+          // Get remaining products
+          const remainingMen = allMen.filter(p => !p.is_featured);
+          const remainingWomen = allWomen.filter(p => !p.is_featured);
+
+          // Build a 4-item array: Men, Women, Men, Women
+          const finalProducts = [];
           
-          // Interleave them: 1 men, 1 women, 1 men, 1 women...
-          const alternating = [];
-          const maxLen = Math.max(men.length, women.length);
-          for (let i = 0; i < maxLen; i++) {
-            if (men[i]) alternating.push(men[i]);
-            if (women[i]) alternating.push(women[i]);
-          }
+          // Slot 1 (Men)
+          if (featuredMen.length > 0) finalProducts.push(featuredMen.shift());
+          else if (remainingMen.length > 0) finalProducts.push(remainingMen.shift());
           
-          // Show first 4 as "Forged Innovations"
-          setProducts(alternating.slice(0, 4));
+          // Slot 2 (Women)
+          if (featuredWomen.length > 0) finalProducts.push(featuredWomen.shift());
+          else if (remainingWomen.length > 0) finalProducts.push(remainingWomen.shift());
+          
+          // Slot 3 (Men)
+          if (featuredMen.length > 0) finalProducts.push(featuredMen.shift());
+          else if (remainingMen.length > 0) finalProducts.push(remainingMen.shift());
+          
+          // Slot 4 (Women)
+          if (featuredWomen.length > 0) finalProducts.push(featuredWomen.shift());
+          else if (remainingWomen.length > 0) finalProducts.push(remainingWomen.shift());
+
+          setProducts(finalProducts);
         }
       } catch (err) {
         console.error("Failed to fetch products:", err);

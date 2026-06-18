@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { adminFetchProductsList, adminDeleteProduct } from '../../backend/admin';
+import { adminFetchProductsList, adminDeleteProduct, adminToggleFeaturedProduct } from '../../backend/admin';
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -33,6 +33,16 @@ const ProductsList = () => {
     }
   };
 
+  const handleToggleFeatured = async (id, currentStatus) => {
+    try {
+      const updated = await adminToggleFeaturedProduct(id, !currentStatus);
+      setProducts(products.map(p => p.id === id ? { ...p, is_featured: updated.is_featured } : p));
+    } catch (err) {
+      console.error("Failed to toggle featured status", err);
+      alert("Failed to toggle featured status");
+    }
+  };
+
   if (loading) return <div>Loading products...</div>;
 
   return (
@@ -54,6 +64,7 @@ const ProductsList = () => {
               <th>Category</th>
               <th>Gender</th>
               <th>GSM</th>
+              <th>Featured</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -77,6 +88,16 @@ const ProductsList = () => {
                   <td>{product.category}</td>
                   <td style={{ textTransform: 'capitalize' }}>{product.gender}</td>
                   <td>{product.gsm || 'N/A'}</td>
+                  <td>
+                    <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                      <input 
+                        type="checkbox" 
+                        checked={!!product.is_featured}
+                        onChange={() => handleToggleFeatured(product.id, product.is_featured)}
+                        style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: '#ff3333' }}
+                      />
+                    </label>
+                  </td>
                   <td>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
                       <button 

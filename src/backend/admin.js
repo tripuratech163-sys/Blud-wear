@@ -19,7 +19,7 @@ export const adminFetchProductsList = async () => {
   if (!supabase) throw new Error('Supabase client not initialized');
   const { data, error } = await supabase
     .from('products')
-    .select('id, name, price, category, gender, gsm, image, created_at')
+    .select('id, name, price, category, gender, gsm, image, is_featured, created_at')
     .order('created_at', { ascending: false });
   
   if (error) throw error;
@@ -72,6 +72,19 @@ export const adminDeleteProduct = async (productId) => {
 
   if (error) throw error;
   return true;
+};
+
+export const adminToggleFeaturedProduct = async (productId, isFeatured) => {
+  if (!supabase) throw new Error('Supabase client not initialized');
+  const { data, error } = await supabase
+    .from('products')
+    .update({ is_featured: isFeatured })
+    .eq('id', productId)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
 };
 
 // ==========================================
