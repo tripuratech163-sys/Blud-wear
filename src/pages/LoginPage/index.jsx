@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import { supabase } from '../../lib/supabase';
+import { auth as firebaseAuth } from '../../lib/firebase';
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [authMethod, setAuthMethod] = useState('mobile'); // 'mobile' is now default
+  const [authMethod, setAuthMethod] = useState('email'); // Default to email for now
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,6 +20,7 @@ const LoginPage = () => {
   const [phone, setPhone] = useState('+91');
   const [otp, setOtp] = useState('');
   const [otpSent, setOtpSent] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState(null);
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -30,6 +33,19 @@ const LoginPage = () => {
     navigate('/');
     return null;
   }
+
+  // Setup recaptcha
+  useEffect(() => {
+    if (!window.recaptchaVerifier) {
+      try {
+        window.recaptchaVerifier = new RecaptchaVerifier(firebaseAuth, 'recaptcha-container', {
+          'size': 'invisible',
+        });
+      } catch (err) {
+        console.error("Recaptcha init error", err);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,30 +62,50 @@ const LoginPage = () => {
     if (authMethod === 'mobile') {
       try {
         if (!otpSent) {
-          // Send OTP
+          // Send OTP via Firebase
           if (!phone || phone.length < 10) {
             throw new Error("Please enter a valid mobile number with country code (e.g., +91).");
           }
-          const { error } = await supabase.auth.signInWithOtp({ phone });
-          if (error) throw error;
+          const appVerifier = window.recaptchaVerifier;
+          const confirmation = await signInWithPhoneNumber(firebaseAuth, phone, appVerifier);
+          setConfirmationResult(confirmation);
           setOtpSent(true);
           setSuccess("OTP sent to your mobile number.");
         } else {
-          // Verify OTP
+          // Verify OTP via Firebase
           if (!otp || otp.length < 6) {
             throw new Error("Please enter the 6-digit OTP.");
           }
-          const { error } = await supabase.auth.verifyOtp({ phone, token: otp, type: 'sms' });
-          if (error) throw error;
+          const result = await confirmationResult.confirm(otp);
+          const idToken = await result.user.getIdToken();
 
-          if (!isLogin && name) {
-            // Optional: update user profile with name if signing up
-            await supabase.auth.updateUser({ data: { full_name: name } });
+          // Sync with Supabase Edge Function
+          const { data, error } = await supabase.functions.invoke('firebase-sync', {
+            body: { idToken, name: isLogin ? '' : name }
+          });
+
+          if (error || !data?.success) {
+            throw new Error(error?.message || data?.error || "Failed to sync with Supabase");
           }
+
+          // Log into Supabase natively using the returned credentials
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: data.email,
+            password: data.password
+          });
+
+          if (signInError) throw signInError;
+
           navigate('/');
         }
       } catch (err) {
         setError(err.message || "Authentication failed. Note: SMS requires Twilio/MessageBird config in Supabase.");
+        // Reset recaptcha if error
+        if (window.recaptchaVerifier && window.grecaptcha) {
+          window.recaptchaVerifier.render().then(widgetId => {
+            window.grecaptcha.reset(widgetId);
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -176,7 +212,7 @@ const LoginPage = () => {
                 </button>
               </div>
 
-              <div className="auth-method-toggle" style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', justifyContent: 'center' }}>
+              <div className="auth-method-toggle" style={{ display: 'none', gap: '1rem', marginBottom: '1.5rem', justifyContent: 'center' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontSize: '0.9rem', cursor: 'pointer' }}>
                   <input
                     type="radio"
@@ -203,6 +239,7 @@ const LoginPage = () => {
               </p>
 
               <form className="auth-form" onSubmit={handleSubmit}>
+                <div id="recaptcha-container"></div>
                 {error && <div className="login-error-msg">{error}</div>}
                 {success && <div className="login-success-msg">{success}</div>}
 

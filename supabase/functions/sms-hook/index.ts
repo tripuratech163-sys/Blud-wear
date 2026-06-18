@@ -21,25 +21,25 @@ serve(async (req) => {
     // We strip everything except numbers, then take the last 10 digits.
     const cleanPhone = phone.replace(/\D/g, '').slice(-10);
 
-    // 3. Get Fast2SMS API Key from Edge Function Environment Secrets
+    // 3. Get Fast2SMS API Key and Template ID from Edge Function Environment Secrets
     const fast2smsKey = Deno.env.get('FAST2SMS_API_KEY');
+    const otpId = Deno.env.get('FAST2SMS_OTP_ID');
 
-    if (!fast2smsKey) {
-      throw new Error("FAST2SMS_API_KEY is not set in Supabase Secrets");
+    if (!fast2smsKey || !otpId) {
+      throw new Error("FAST2SMS_API_KEY or FAST2SMS_OTP_ID is not set in Supabase Secrets");
     }
 
-    // 4. Send the OTP via Fast2SMS (Using 'q' route instead of 'otp' to bypass DLT requirements)
-    const response = await fetch("https://www.fast2sms.com/dev/bulkV2", {
+    // 4. Send the OTP via Fast2SMS using official OTP API (DLT Compliant)
+    const response = await fetch("https://www.fast2sms.com/dev/otp/send", {
       method: "POST",
       headers: {
         "authorization": fast2smsKey,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        route: "q",
-        message: `Your BludWear login OTP is ${otp}. Please do not share it with anyone.`,
-        flash: 0,
-        numbers: cleanPhone
+        mobile: cleanPhone,
+        otp_id: otpId,
+        otp: otp
       })
     });
 
