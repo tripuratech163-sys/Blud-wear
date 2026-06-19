@@ -8,6 +8,8 @@ const OrderSuccessPage = () => {
   const navigate = useNavigate();
   const order = location.state?.order;
 
+  const shippingCost = order ? (Number(order.total_amount) - Number(order.subtotal) - Number(order.gst_amount) - Number(order.discount_amount || 0)) : 0;
+
   if (!order) {
     return (
       <div className="order-success-page">
@@ -83,10 +85,14 @@ const OrderSuccessPage = () => {
               </div>
               <div className="receipt-row">
                 <span>Shipping</span>
-                <span style={{ color: '#4cd964' }}>FREE</span>
+                {shippingCost > 0 ? (
+                  <span>₹{shippingCost.toFixed(2)}</span>
+                ) : (
+                  <span style={{ color: '#4cd964' }}>FREE</span>
+                )}
               </div>
               <div className="receipt-row receipt-final">
-                <span>Total Paid</span>
+                <span>{order.payment_method === 'COD' ? 'Total Payable' : 'Total Paid'}</span>
                 <span>₹{Number(order.total_amount).toFixed(2)}</span>
               </div>
             </div>
