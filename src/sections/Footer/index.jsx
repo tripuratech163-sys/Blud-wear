@@ -19,7 +19,7 @@ const Footer = () => {
           <div className="footer-contact">
             <a href="mailto:wearblud@gmail.com">
               <span className="contact-icon">@</span>
-              wearblud@gamil.com
+              wearblud@gmail.com
             </a>
             <a href="https://www.instagram.com/blud.wear?igsh=cDNwcmhxdGtjMjQ1" target="_blank" rel="noreferrer">
               <span className="contact-icon">IG</span>
@@ -51,7 +51,7 @@ const Footer = () => {
           <div className="link-group">
             <h3>Connect</h3>
             <a href="https://www.instagram.com/bludwear/" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="mailto:hello@bludwear.com">Email</a>
+            <a href="mailto:wearblud@gmail.com">Email</a>
           </div>
         </div>
       </div>
@@ -61,7 +61,7 @@ const Footer = () => {
           <p>&copy; {new Date().getFullYear()} BludWear. All rights reserved.</p>
           <div className="social-links">
             <a href="https://www.instagram.com/bludwear/" target="_blank" rel="noreferrer">Instagram</a>
-            <a href="mailto:hello@bludwear.com">Email</a>
+            <a href="mailto:wearblud@gmail.com">Email</a>
           </div>
         </div>
       </div>

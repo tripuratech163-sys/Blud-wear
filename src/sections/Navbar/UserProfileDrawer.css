@@ -30,6 +30,7 @@
   flex-direction: column;
   transition: transform 0.4s cubic-bezier(0.77, 0, 0.175, 1);
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .profile-drawer.open {
@@ -174,13 +175,23 @@
 }
 
 .drawer-popular-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  overflow-x: auto;
   gap: 1rem;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Hide scrollbar for cleaner look */
+}
+
+.drawer-popular-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .drawer-product {
   cursor: pointer;
+  flex: 0 0 65%; /* Show one product and peek the next */
+  scroll-snap-align: start;
 }
 
 .drawer-product img {

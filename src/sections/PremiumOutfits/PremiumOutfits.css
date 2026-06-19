@@ -17,9 +17,10 @@
 }
 
 .outfits-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: center;
   gap: 1.25rem;
+  flex-wrap: wrap;
 }
 
 .outfit-card {
@@ -28,6 +29,8 @@
   overflow: hidden;
   background-color: #ffffff; /* White background for white-background photos */
   cursor: pointer;
+  width: 100%;
+  max-width: 420px;
 }
 
 .outfit-image {
@@ -107,6 +110,7 @@
 /* Mobile Optimization */
 @media (max-width: 768px) {
   .outfits-grid {
+    display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.5rem; /* Tighter gap on mobile so images are bigger */
   }

@@ -3,11 +3,7 @@ import './PremiumOutfits.css';
 
 const categories = [
   { id: 1, name: "COMPRESSION", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Black%20Full/DSC_8003.jpg", link: "/collection" },
-  { id: 2, name: "JOGGERS", image: "/joggers.png", comingSoon: true },
-  { id: 3, name: "T-SHIRT", image: "/tshirt.png", comingSoon: true },
-  { id: 4, name: "SHORTS", image: "/shorts.png", comingSoon: true },
-  { id: 5, name: "LEGGINGS", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Pink%20Full/DSC_7764.jpg", comingSoon: true },
-  { id: 6, name: "ACCESSORIES", image: "/hero.png", comingSoon: true },
+  { id: 2, name: "TANK", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7592.jpg", link: "/collection" },
 ];
 
 const PremiumOutfits = () => {

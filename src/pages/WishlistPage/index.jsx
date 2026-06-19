@@ -58,7 +58,7 @@ const WishlistPage = () => {
       <main className="wishlist-main">
         <div className="container wishlist-container">
           <div className="wishlist-header">
-            <h1 className="wishlist-title">My Wishlist</h1>
+            <h1 className="wishlist-title">My Bludlist</h1>
             <p className="wishlist-subtitle">Save your favorite athletic gear here for quick access.</p>
           </div>
 
@@ -70,11 +70,11 @@ const WishlistPage = () => {
               <Link to="/login" className="wishlist-btn-primary">Sign In</Link>
             </div>
           ) : loading ? (
-            <div className="wishlist-loading">Loading your wishlist...</div>
+            <div className="wishlist-loading">Loading your Bludlist...</div>
           ) : wishlistItems.length === 0 ? (
             <div className="wishlist-empty-state">
               <div className="empty-icon">🖤</div>
-              <h2>Your Wishlist is Empty</h2>
+              <h2>Your Bludlist is Empty</h2>
               <p>Explore the legacy collection and tap the heart icon to save products.</p>
               <Link to="/collection" className="wishlist-btn-primary">Explore Collection</Link>
             </div>
@@ -89,8 +89,8 @@ const WishlistPage = () => {
                   <div key={item.id} className="wishlist-card">
                     <div className="wishlist-img-wrapper">
                       <img src={image} alt={product.name} />
-                      <button 
-                        className="remove-btn" 
+                      <button
+                        className="remove-btn"
                         onClick={() => handleRemove(product.id)}
                         title="Remove from Wishlist"
                         aria-label="Remove from Wishlist"
@@ -110,7 +110,7 @@ const WishlistPage = () => {
                           {formatPrice(product.price)}
                         </span>
                       </div>
-                      
+
                       <Link to={`/products/${slug}`} className="view-product-btn">
                         View Product Details
                       </Link>

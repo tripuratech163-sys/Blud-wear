@@ -18,7 +18,7 @@ const Hero = () => {
         </p>
         <div className="hero-actions">
           <a href="#collection" className="btn btn-primary">ACQUIRE GEAR</a>
-          <a href="#about" className="btn btn-outline">THE BLOODLINE</a>
+          <a href="#about" className="btn btn-outline">THE BLUDLINE</a>
         </div>
       </div>
     </section>

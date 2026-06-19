@@ -162,8 +162,7 @@
     font-size: 1.2rem;
     letter-spacing: 1.2px;
   }
-  .navbar-actions .icon-btn:nth-child(1),
-  .navbar-actions .icon-btn:nth-child(2) {
-    display: none; /* Hide search and user icon on mobile to save space */
+  .hidden-mobile {
+    display: none !important;
   }
 }
