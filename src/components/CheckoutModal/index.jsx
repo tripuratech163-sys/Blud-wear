@@ -57,16 +57,6 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen, user]);
 
-  if (!isOpen) return null;
-
-  // Pricing calculations
-  const basePrice = cartItems.reduce((acc, item) => {
-    const priceNum = Number(item.products.price.replace(/[^0-9.-]+/g, "")) || 0;
-    return acc + (priceNum * item.quantity);
-  }, 0);
-  const gstAmount = 0;
-  const finalTotal = basePrice + shippingCost;
-
   // Fetch live shipping rates when Pincode or Payment Method changes
   useEffect(() => {
     const fetchShipping = async () => {
@@ -94,6 +84,17 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     };
     fetchShipping();
   }, [shipping.pincode, selectedPayment, cartItems.length]);
+
+  if (!isOpen) return null;
+
+  // Pricing calculations
+  const basePrice = cartItems.reduce((acc, item) => {
+    const priceNum = Number(item.products.price.replace(/[^0-9.-]+/g, "")) || 0;
+    return acc + (priceNum * item.quantity);
+  }, 0);
+  const gstAmount = 0;
+  const finalTotal = basePrice + shippingCost;
+
 
   // --- Auth handlers ---
   const handleSendOtp = async (e) => {
