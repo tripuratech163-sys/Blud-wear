@@ -159,6 +159,19 @@ serve(async (req) => {
 
       const bookingData = JSON.parse(bookingRawBody);
 
+      // Shiprocket sometimes returns 200 OK HTTP status but puts an error code in the JSON payload
+      // Note: Shiprocket returns status_code: 1 for SUCCESS!
+      if (bookingData.status_code !== undefined && 
+          bookingData.status_code !== 200 && 
+          bookingData.status_code !== 201 && 
+          bookingData.status_code !== 1) {
+        throw new Error(`Shiprocket rejected the order: ${bookingData.message || bookingRawBody}`);
+      }
+      
+      if (bookingData.order_id === undefined && bookingData.payload?.order_id === undefined) {
+        throw new Error(`Shiprocket failed to create order. Response: ${bookingRawBody}`);
+      }
+
       // Shiprocket returns order_id and shipment_id at the top level
       // or sometimes nested inside payload
       shiprocket_order_id = String(

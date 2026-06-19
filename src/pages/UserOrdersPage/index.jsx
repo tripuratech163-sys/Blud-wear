@@ -308,7 +308,27 @@ const UserOrdersPage = () => {
                               {order.shiprocket_awb ? (
                                 <>
                                   <span>AWB Number: <strong>{order.shiprocket_awb}</strong></span>
-                                  <span>Courier Status: <strong>{order.shiprocket_status}</strong></span>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                                    <span>Courier Status: <strong>{order.shiprocket_status}</strong></span>
+                                    <a 
+                                      href={`https://shiprocket.co/tracking/${order.shiprocket_awb}`} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer"
+                                      style={{
+                                        display: 'inline-block',
+                                        backgroundColor: '#1a1a1a',
+                                        color: '#fff',
+                                        padding: '0.4rem 0.8rem',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 'bold',
+                                        borderRadius: '4px',
+                                        textDecoration: 'none',
+                                        border: '1px solid #333'
+                                      }}
+                                    >
+                                      📍 Track Package Live
+                                    </a>
+                                  </div>
                                 </>
                               ) : (
                                 <span>Order Status: <strong>{order.status}</strong></span>

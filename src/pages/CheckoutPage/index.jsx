@@ -40,12 +40,44 @@ const CheckoutPage = () => {
   const [promoError, setPromoError] = useState('');
   const [promoSuccess, setPromoSuccess] = useState('');
 
+  // Shipping cost states
+  const [shippingCost, setShippingCost] = useState(0);
+  const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
+
   useEffect(() => {
     // If cart is empty and has finished loading, redirect back to collection
     if (!cartLoading && user && cartItems.length === 0) {
       navigate('/collection');
     }
   }, [user, cartItems, cartLoading, navigate]);
+
+  // Fetch live shipping rates when Pincode or Payment Method changes
+  useEffect(() => {
+    const fetchShipping = async () => {
+      if (shipping.pincode && shipping.pincode.length === 6) {
+        setIsCalculatingShipping(true);
+        try {
+          const { data, error } = await supabase.functions.invoke('calculate-shipping', {
+            body: { 
+              delivery_postcode: shipping.pincode,
+              cod: paymentMethod === 'COD',
+              weight: cartItems.length * 0.5 || 0.5
+            }
+          });
+          if (error) throw error;
+          setShippingCost(data.shipping_cost || 0);
+        } catch (err) {
+          console.error("Failed to calculate live shipping:", err);
+          setShippingCost(paymentMethod === 'COD' ? 90 : 50); // Fallback
+        } finally {
+          setIsCalculatingShipping(false);
+        }
+      } else {
+        setShippingCost(0);
+      }
+    };
+    fetchShipping();
+  }, [shipping.pincode, paymentMethod, cartItems.length]);
 
   const handleSendOtp = async (e) => {
     e.preventDefault();
@@ -115,8 +147,8 @@ const CheckoutPage = () => {
     : 0;
 
   const discountedBasePrice = basePrice - discountAmount;
-  const gstAmount = discountedBasePrice * 0.18;
-  const finalTotal = discountedBasePrice + gstAmount;
+  const gstAmount = 0;
+  const finalTotal = discountedBasePrice + shippingCost;
 
   const handleApplyPromo = (e) => {
     e.preventDefault();
@@ -252,6 +284,19 @@ const CheckoutPage = () => {
       await deductOrderItems(orderItemsPayload);
     } catch (deductErr) {
       console.error("Failed to deduct inventory stock:", deductErr);
+    }
+
+    // Auto-book on Shiprocket (Silently fail if Shiprocket is down)
+    try {
+      await supabase.functions.invoke('book-shiprocket-shipment', {
+        body: { 
+          order_id: orderData.id,
+          weight: 0.5,
+          dimensions: { length: 10, width: 10, height: 10 }
+        }
+      });
+    } catch (shiprocketErr) {
+      console.error("Auto-booking on Shiprocket failed:", shiprocketErr);
     }
 
     // Clear Cart
@@ -468,13 +513,10 @@ const CheckoutPage = () => {
                     <span>-₹{discountAmount.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="summary-line">
-                  <span>GST (18%)</span>
-                  <span>₹{gstAmount.toFixed(2)}</span>
-                </div>
+
                 <div className="summary-line highlight">
                   <span>Shipping</span>
-                  <span>FREE</span>
+                  <span>{isCalculatingShipping ? 'Calculating...' : (shippingCost === 0 ? 'Enter Pincode' : `₹${shippingCost.toFixed(2)}`)}</span>
                 </div>
                 <div className="summary-line total">
                   <span>Total Amount</span>
