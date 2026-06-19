@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import { supabase } from '../../lib/supabase';
-import { auth as firebaseAuth } from '../../lib/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
@@ -16,11 +14,6 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-
-  const [phone, setPhone] = useState('+91');
-  const [otp, setOtp] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [confirmationResult, setConfirmationResult] = useState(null);
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -34,18 +27,7 @@ const LoginPage = () => {
     return null;
   }
 
-  // Setup recaptcha
-  useEffect(() => {
-    if (!window.recaptchaVerifier) {
-      try {
-        window.recaptchaVerifier = new RecaptchaVerifier(firebaseAuth, 'recaptcha-container', {
-          'size': 'invisible',
-        });
-      } catch (err) {
-        console.error("Recaptcha init error", err);
-      }
-    }
-  }, []);
+  // Removed recaptcha setup
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,61 +40,7 @@ const LoginPage = () => {
     setError(null);
     setSuccess(null);
 
-    // Mobile Auth Flow
-    if (authMethod === 'mobile') {
-      try {
-        if (!otpSent) {
-          // Send OTP via Firebase
-          if (!phone || phone.length < 10) {
-            throw new Error("Please enter a valid mobile number with country code (e.g., +91).");
-          }
-          const appVerifier = window.recaptchaVerifier;
-          const confirmation = await signInWithPhoneNumber(firebaseAuth, phone, appVerifier);
-          setConfirmationResult(confirmation);
-          setOtpSent(true);
-          setSuccess("OTP sent to your mobile number.");
-        } else {
-          // Verify OTP via Firebase
-          if (!otp || otp.length < 6) {
-            throw new Error("Please enter the 6-digit OTP.");
-          }
-          const result = await confirmationResult.confirm(otp);
-          const idToken = await result.user.getIdToken();
-
-          // Sync with Supabase Edge Function
-          const { data, error } = await supabase.functions.invoke('firebase-sync', {
-            body: { idToken, name: isLogin ? '' : name }
-          });
-
-          if (error || !data?.success) {
-            throw new Error(error?.message || data?.error || "Failed to sync with Supabase");
-          }
-
-          // Log into Supabase natively using the returned credentials
-          const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: data.email,
-            password: data.password
-          });
-
-          if (signInError) throw signInError;
-
-          navigate('/');
-        }
-      } catch (err) {
-        setError(err.message || "Authentication failed. Note: SMS requires Twilio/MessageBird config in Supabase.");
-        // Reset recaptcha if error
-        if (window.recaptchaVerifier && window.grecaptcha) {
-          window.recaptchaVerifier.render().then(widgetId => {
-            window.grecaptcha.reset(widgetId);
-          });
-        }
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    // Email Auth Flow
+    // Mobile Auth Flow removed (Firebase deprecated)
 
     // Form Validations
     if (!isLogin && name.trim().length < 2) {
@@ -212,22 +140,7 @@ const LoginPage = () => {
                 </button>
               </div>
 
-              <div className="auth-method-toggle" style={{ display: 'none', gap: '1rem', marginBottom: '1.5rem', justifyContent: 'center' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontSize: '0.9rem', cursor: 'pointer' }}>
-                  <input
-                    type="radio"
-                    checked={authMethod === 'email'}
-                    onChange={() => { setAuthMethod('email'); setError(null); setSuccess(null); }}
-                  /> Email
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontSize: '0.9rem', cursor: 'pointer' }}>
-                  <input
-                    type="radio"
-                    checked={authMethod === 'mobile'}
-                    onChange={() => { setAuthMethod('mobile'); setError(null); setSuccess(null); }}
-                  /> Mobile OTP
-                </label>
-              </div>
+              {/* Auth Method Toggle Removed */}
 
               <h1 className="login-title">
                 {isLogin ? 'ENTER THE BLOODLINE' : 'Create Account'}
@@ -257,7 +170,6 @@ const LoginPage = () => {
                   </div>
                 )}
 
-                {authMethod === 'email' ? (
                   <>
                     <div className="input-group">
                       <label>Email Address</label>
@@ -287,49 +199,9 @@ const LoginPage = () => {
                       </div>
                     )}
                   </>
-                ) : (
-                  <>
-                    <div className="input-group">
-                      <label>Mobile Number</label>
-                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'stretch' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 1rem', backgroundColor: '#111', border: '1px solid #333', borderRadius: '4px', color: '#fff', fontSize: '0.95rem', fontWeight: '600' }}>
-                          🇮🇳 +91
-                        </div>
-                        <input
-                          type="tel"
-                          placeholder="10-digit mobile number"
-                          required
-                          disabled={otpSent}
-                          value={phone.replace(/^\+91/, '')}
-                          onChange={(e) => setPhone('+91' + e.target.value.replace(/\D/g, '').slice(0, 10))}
-                          maxLength="15"
-                          style={{ flex: 1, marginBottom: 0 }}
-                        />
-                      </div>
-                    </div>
-                    {otpSent && (
-                      <div className="input-group">
-                        <label>Enter 6-digit OTP</label>
-                        <input
-                          type="text"
-                          placeholder="••••••"
-                          required
-                          value={otp}
-                          onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                          maxLength="6"
-                          style={{ letterSpacing: '0.5rem', textAlign: 'center', fontSize: '1.25rem', fontWeight: 'bold' }}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
 
                 <button type="submit" className="login-submit-btn" disabled={loading}>
-                  {loading ? 'Processing...' : (
-                    authMethod === 'mobile'
-                      ? (otpSent ? 'Verify OTP & Proceed' : 'Send OTP')
-                      : (isLogin ? 'Sign In' : 'Create Account')
-                  )}
+                  {loading ? 'Processing...' : (isLogin ? 'Sign In' : 'Create Account')}
                 </button>
               </form>
 
