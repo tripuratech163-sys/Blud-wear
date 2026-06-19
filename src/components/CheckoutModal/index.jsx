@@ -38,6 +38,10 @@ const CheckoutModal = ({ isOpen, onClose }) => {
   const [checkoutError, setCheckoutError] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('upi'); // 'upi', 'card', 'netbanking', 'cod'
 
+  // Shipping calculation state
+  const [shippingCost, setShippingCost] = useState(0);
+  const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
+
   // Auto-advance step if already logged in
   useEffect(() => {
     if (isOpen) {
@@ -61,7 +65,35 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     return acc + (priceNum * item.quantity);
   }, 0);
   const gstAmount = 0;
-  const finalTotal = basePrice;
+  const finalTotal = basePrice + shippingCost;
+
+  // Fetch live shipping rates when Pincode or Payment Method changes
+  useEffect(() => {
+    const fetchShipping = async () => {
+      if (shipping.pincode && shipping.pincode.length === 6) {
+        setIsCalculatingShipping(true);
+        try {
+          const { data, error } = await supabase.functions.invoke('calculate-shipping', {
+            body: { 
+              delivery_postcode: shipping.pincode,
+              cod: selectedPayment === 'cod',
+              weight: cartItems.length * 0.5 || 0.5
+            }
+          });
+          if (error) throw error;
+          setShippingCost(data.shipping_cost || 0);
+        } catch (err) {
+          console.error("Failed to calculate live shipping:", err);
+          setShippingCost(selectedPayment === 'cod' ? 90 : 50); // Fallback
+        } finally {
+          setIsCalculatingShipping(false);
+        }
+      } else {
+        setShippingCost(0);
+      }
+    };
+    fetchShipping();
+  }, [shipping.pincode, selectedPayment, cartItems.length]);
 
   // --- Auth handlers ---
   const handleSendOtp = async (e) => {
@@ -231,6 +263,19 @@ const CheckoutModal = ({ isOpen, onClose }) => {
       console.error("Failed to automatically deduct inventory stock:", deductErr);
     }
 
+    // Auto-book on Shiprocket (Silently fail if Shiprocket is down)
+    try {
+      await supabase.functions.invoke('book-shiprocket-shipment', {
+        body: { 
+          order_id: savedOrder.id,
+          weight: 0.5,
+          dimensions: { length: 10, width: 10, height: 10 }
+        }
+      });
+    } catch (shiprocketErr) {
+      console.error("Auto-booking on Shiprocket failed:", shiprocketErr);
+    }
+
     // Clear cart
     await clearCart(user.id);
     await refreshCart();
@@ -280,7 +325,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
 
               <div className="c-price-row c-price-delivery">
                 <span>🚚 Delivery Charges</span>
-                <span className="c-free-tag">FREE</span>
+                {isCalculatingShipping ? <span>Calculating...</span> : (shippingCost === 0 ? <span className="c-free-tag">Enter Pincode</span> : <span>₹{shippingCost.toFixed(2)}</span>)}
               </div>
               <div className="c-price-divider" />
               <div className="c-price-row c-price-total">
@@ -436,7 +481,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                       <div className="c-payment-breakup">
                         <div className="c-pb-row"><span>Item Total</span><span>₹{basePrice.toFixed(2)}</span></div>
 
-                        <div className="c-pb-row"><span>Delivery</span><span className="c-free-tag">FREE</span></div>
+                        <div className="c-pb-row"><span>Delivery</span>{isCalculatingShipping ? <span>Calculating...</span> : (shippingCost === 0 ? <span className="c-free-tag">Enter Pincode</span> : <span>₹{shippingCost.toFixed(2)}</span>)}</div>
                         <div className="c-pb-divider" />
                         <div className="c-pb-row c-pb-total"><span>Total to pay</span><strong>₹{finalTotal.toFixed(2)}</strong></div>
                       </div>
