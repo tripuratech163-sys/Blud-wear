@@ -60,8 +60,8 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     const priceNum = Number(item.products.price.replace(/[^0-9.-]+/g, "")) || 0;
     return acc + (priceNum * item.quantity);
   }, 0);
-  const gstAmount = basePrice * 0.18;
-  const finalTotal = basePrice + gstAmount;
+  const gstAmount = 0;
+  const finalTotal = basePrice;
 
   // --- Auth handlers ---
   const handleSendOtp = async (e) => {
@@ -277,10 +277,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                 <span>Item Total (MRP)</span>
                 <span>₹{basePrice.toFixed(2)}</span>
               </div>
-              <div className="c-price-row c-price-gst">
-                <span>GST (18%)</span>
-                <span>+ ₹{gstAmount.toFixed(2)}</span>
-              </div>
+
               <div className="c-price-row c-price-delivery">
                 <span>🚚 Delivery Charges</span>
                 <span className="c-free-tag">FREE</span>
@@ -438,7 +435,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                     <div className="c-payment-total">
                       <div className="c-payment-breakup">
                         <div className="c-pb-row"><span>Item Total</span><span>₹{basePrice.toFixed(2)}</span></div>
-                        <div className="c-pb-row"><span>GST (18%)</span><span>+ ₹{gstAmount.toFixed(2)}</span></div>
+
                         <div className="c-pb-row"><span>Delivery</span><span className="c-free-tag">FREE</span></div>
                         <div className="c-pb-divider" />
                         <div className="c-pb-row c-pb-total"><span>Total to pay</span><strong>₹{finalTotal.toFixed(2)}</strong></div>
