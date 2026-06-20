@@ -624,9 +624,14 @@ const ProductPage = () => {
                     <div className="product-desc-features">
                       <h3 className="product-desc-features-heading">Key Features</h3>
                       <ul className="product-features-list">
-                        {product.key_features.map((feature, i) => (
-                          <li key={i}><span className="feature-check">✔</span> {feature}</li>
-                        ))}
+                        {product.key_features.map((feature, i) => {
+                          const isSpecial = feature.trim().toLowerCase() === 'fabric composition' || feature.trim().toLowerCase() === 'wash care';
+                          return (
+                            <li key={i} style={isSpecial ? { fontWeight: '900', color: '#ff3b30', marginTop: '0.5rem' } : {}}>
+                              <span className="feature-check" style={{ color: isSpecial ? '#ff3b30' : '#c0392b' }}>✔</span> {feature}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   )}
