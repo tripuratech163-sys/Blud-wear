@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import './PremiumOutfits.css';
 
 const categories = [
-  { id: 3, name: "Men COMPRESSION", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Compression%20Pink%20Full/DSC_8043.jpg", link: "/collection" },
-  { id: 1, name: "Women COMPRESSION", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Black%20Full/DSC_8003.jpg", link: "/collection" },
-  { id: 2, name: "TANK", image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Men/Tank%20Black/DSC_7592.jpg", link: "/collection" },
+  { id: 3, name: "Men COMPRESSION", image: "https://res.cloudinary.com/duobc58vr/image/upload/v1781957967/vgs3low4tzuc2blg3dxw.jpg", link: "/collection" },
+  { id: 1, name: "Women COMPRESSION", image: "https://res.cloudinary.com/duobc58vr/image/upload/v1781959627/ChatGPT_Image_Jun_20_2026_06_16_00_PM_spmede.png", link: "/collection" },
+  { id: 2, name: "TANK", image: "https://res.cloudinary.com/duobc58vr/image/upload/v1781957460/rm1qv5rnybxml0vmvdno.jpg", link: "/collection" },
 ];
 
 const PremiumOutfits = () => {
