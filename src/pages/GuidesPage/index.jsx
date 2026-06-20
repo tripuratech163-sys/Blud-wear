@@ -11,7 +11,7 @@ const guidesData = [
     title: "How to Choose the Right Fabric for Cold-Weather Training",
     metaTitle: "Cold-Weather Training Fabrics Guide | BludWear",
     metaDesc: "Discover the best fabric and weights for cold-weather workout gear. Learn about GSM, thermal layering, and moisture-wicking fleece structures.",
-    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Black%20Short/DSC_7652.jpg",
+    image: "https://res.cloudinary.com/duobc58vr/image/upload/v1781958602/xlrjd7urxgkgn7bnsahm.jpg",
     category: "FABRICS",
     readTime: "5 min read",
     summary: "Heavyweight hoodies vs lightweight thermals. Understanding fabric thickness (GSM) and active moisture transfer are key to staying warm without overheating.",
@@ -65,7 +65,7 @@ const guidesData = [
     title: "The Science of Compression Gear for High-Intensity Workouts",
     metaTitle: "Science of Athletic Compression Gear | BludWear",
     metaDesc: "Explore how compression leggings and tops improve performance, stabilize muscles, and reduce post-workout soreness through active circulation support.",
-    image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Womens/Compression%20Red%20Full/DSC_7544.jpg",
+    image: "https://res.cloudinary.com/duobc58vr/image/upload/v1781957438/cldpbyqylcaa4zpzebed.jpg",
     category: "SPORTS SCIENCE",
     readTime: "6 min read",
     summary: "How tight is too tight? Learn the circulatory science behind active graduated compression and its verified benefits on athletic performance.",
@@ -77,7 +77,7 @@ const guidesData = [
 
         <h3>1. Graduated Circulation Support</h3>
         <p>
-          During high-intensity training, your heart pumps oxygen-rich blood to your extremities. However, returning deoxygenated blood from your lower legs back up to the heart is a mechanical challenge. 
+          During high-intensity training, your heart pumps oxygen-rich blood to your extremities. However, returning deoxygenated blood from your lower legs back up to the heart is a mechanical challenge.
         </p>
         <p>
           <strong>Graduated compression</strong> solves this by applying the tightest pressure at the ankles and slowly easing pressure upwards. This compression squeezes vein walls, speeding up blood velocity and accelerating the removal of lactic acid buildup.
@@ -136,7 +136,7 @@ const GuidesPage = () => {
           /* Single Article View */
           <div className="single-guide-container">
             <Link to="/guides" className="back-link">← All Expert Guides</Link>
-            
+
             <header className="guide-header">
               <span className="guide-badge">{activeGuide.category}</span>
               <h1>{activeGuide.title}</h1>
