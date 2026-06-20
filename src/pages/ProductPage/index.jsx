@@ -913,89 +913,95 @@ const ProductPage = () => {
                     </p>
                     
                     <div className="size-tables">
-                      <h3>MEN'S SIZING CHART</h3>
-                      <table className="size-table">
-                        <thead>
-                          <tr>
-                            <th>Size</th>
-                            <th>Chest (Inches)</th>
-                            <th>Waist (Inches)</th>
-                            <th>Hips (Inches)</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>S</td>
-                            <td>36 - 38</td>
-                            <td>28 - 30</td>
-                            <td>34 - 36</td>
-                          </tr>
-                          <tr>
-                            <td>M</td>
-                            <td>38 - 40</td>
-                            <td>30 - 32</td>
-                            <td>36 - 38</td>
-                          </tr>
-                          <tr>
-                            <td>L</td>
-                            <td>40 - 42</td>
-                            <td>32 - 34</td>
-                            <td>38 - 40</td>
-                          </tr>
-                          <tr>
-                            <td>XL</td>
-                            <td>42 - 44</td>
-                            <td>34 - 36</td>
-                            <td>40 - 42</td>
-                          </tr>
-                        </tbody>
-                      </table>
-
-                      <h3>WOMEN'S SIZING CHART</h3>
-                      <table className="size-table">
-                        <thead>
-                          <tr>
-                            <th>Size</th>
-                            <th>Bust (Inches)</th>
-                            <th>Waist (Inches)</th>
-                            <th>Hips (Inches)</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>S</td>
-                            <td>32 - 34</td>
-                            <td>25 - 27</td>
-                            <td>35 - 37</td>
-                          </tr>
-                          <tr>
-                            <td>M</td>
-                            <td>34 - 36</td>
-                            <td>27 - 29</td>
-                            <td>37 - 39</td>
-                          </tr>
-                          <tr>
-                            <td>L</td>
-                            <td>36 - 38</td>
-                            <td>29 - 31</td>
-                            <td>39 - 41</td>
-                          </tr>
-                          <tr>
-                            <td>XL</td>
-                            <td>38 - 40</td>
-                            <td>31 - 33</td>
-                            <td>41 - 43</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      {(!product?.name?.toLowerCase().includes('tank') && !product?.name?.toLowerCase().includes('oversize')) ? (
+                        <>
+                          <h3 style={{ textAlign: 'center', marginBottom: '0.25rem', color: '#3b82f6', letterSpacing: '2px' }}>COMPRESSION FIT</h3>
+                          <p style={{ textAlign: 'center', fontSize: '0.85rem', color: '#aaa', marginBottom: '1.5rem' }}>(Go for a size up than your regular ones)</p>
+                          <table className="size-table" style={{ width: '100%', textAlign: 'center', borderCollapse: 'collapse' }}>
+                            <thead>
+                              <tr style={{ borderBottom: '1px solid #333' }}>
+                                <th style={{ padding: '1rem' }}>SIZE</th>
+                                <th style={{ padding: '1rem' }}>CHEST (IN)</th>
+                                <th style={{ padding: '1rem' }}>FRONT LENGTH (IN)</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>S</td>
+                                <td>35"</td>
+                                <td>24</td>
+                              </tr>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>M</td>
+                                <td>37"</td>
+                                <td>25</td>
+                              </tr>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>L</td>
+                                <td>39"</td>
+                                <td>26</td>
+                              </tr>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>XL</td>
+                                <td>41"</td>
+                                <td>27</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>XXL</td>
+                                <td>42"</td>
+                                <td>28</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </>
+                      ) : (
+                        <>
+                          <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#3b82f6', letterSpacing: '2px' }}>OVERSIZE/LOOSE FIT</h3>
+                          <table className="size-table" style={{ width: '100%', textAlign: 'center', borderCollapse: 'collapse' }}>
+                            <thead>
+                              <tr style={{ borderBottom: '1px solid #333' }}>
+                                <th style={{ padding: '1rem' }}>SIZE</th>
+                                <th style={{ padding: '1rem' }}>CHEST (IN)</th>
+                                <th style={{ padding: '1rem' }}>LENGTH (IN)</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>S</td>
+                                <td>42</td>
+                                <td>27.5</td>
+                              </tr>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>M</td>
+                                <td>44</td>
+                                <td>28.5</td>
+                              </tr>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>L</td>
+                                <td>46</td>
+                                <td>29</td>
+                              </tr>
+                              <tr style={{ borderBottom: '1px solid #222' }}>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>XL</td>
+                                <td>48</td>
+                                <td>29.5</td>
+                              </tr>
+                              <tr>
+                                <td style={{ padding: '1rem', fontWeight: 'bold' }}>XXL</td>
+                                <td>50</td>
+                                <td>30</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </>
+                      )}
                     </div>
 
-                    <div className="how-to-measure">
-                      <h3>HOW TO MEASURE</h3>
-                      <ul>
-                        <li><strong>Chest/Bust:</strong> Measure around the fullest part of your chest, keeping the tape horizontal.</li>
-                        <li><strong>Waist:</strong> Measure around the narrowest part of your waistline (typically where your body bends side to side).</li>
-                        <li><strong>Hips:</strong> Measure around the fullest part of your hips, keeping feet together.</li>
+                    <div className="how-to-measure" style={{ marginTop: '2rem' }}>
+                      <h3 style={{ marginBottom: '1rem' }}>HOW TO MEASURE</h3>
+                      <ul style={{ paddingLeft: '1.5rem', color: '#ccc', lineHeight: '1.6', fontSize: '0.9rem' }}>
+                        <li style={{ marginBottom: '0.5rem' }}><strong>Chest:</strong> Measure around the fullest part of your chest, keeping the tape horizontal.</li>
+                        <li><strong>Length:</strong> Measure from the highest point of the shoulder down to the bottom hem.</li>
                       </ul>
                     </div>
                   </div>
