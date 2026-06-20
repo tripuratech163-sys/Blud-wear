@@ -192,6 +192,9 @@ const CheckoutPage = () => {
           `order_${Date.now()}`
         );
 
+        // Step 1.5: Save order to Supabase as pending_payment
+        const pendingOrder = await saveOrder(paymentMethod, null, orderData.order_id, 'pending_payment');
+
         // Step 2: Open Razorpay checkout
         const paymentResult = await openRazorpayCheckout({
           key: orderData.key_id || import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -200,7 +203,7 @@ const CheckoutPage = () => {
           order_id: orderData.order_id,
           name: "BludWear",
           description: `Order of ${cartItems.length} item(s)`,
-          image: "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Home%20Page/1.jpeg",
+          image: "https://res.cloudinary.com/duobc58vr/image/upload/v1781941751/1.jpg_1_gaqvnn.jpg",
           prefill: {
             name: shipping.name,
             contact: shipping.phone,
@@ -220,8 +223,8 @@ const CheckoutPage = () => {
           paymentResult.razorpay_signature
         );
 
-        // Step 4: Save order to Supabase
-        await saveOrder(paymentMethod, paymentResult.razorpay_payment_id, paymentResult.razorpay_order_id);
+        // Step 4: Update order to 'paid' in Supabase
+        await updateOrderToPaid(pendingOrder.id, paymentResult.razorpay_payment_id);
       }
     } catch (err) {
       console.error("Checkout Error:", err);
@@ -237,14 +240,14 @@ const CheckoutPage = () => {
     }
   };
 
-  const saveOrder = async (method, paymentId, razorpayOrderId) => {
+  const saveOrder = async (method, paymentId, razorpayOrderId, initialStatus = 'confirmed') => {
     const orderPayload = {
       user_id: user.id,
       total_amount: finalTotal,
       subtotal: basePrice,
       gst_amount: gstAmount,
       discount_amount: discountAmount,
-      status: 'confirmed',
+      status: initialStatus === 'pending_payment' ? 'pending' : 'confirmed',
       shipping_name: shipping.name,
       shipping_phone: shipping.phone,
       shipping_address: `${shipping.address}, ${shipping.city}, ${shipping.state}`,
@@ -252,7 +255,9 @@ const CheckoutPage = () => {
       shipping_city: shipping.city,
       shipping_state: shipping.state,
       payment_method: method,
-      payment_status: method === 'COD' ? 'pending' : 'paid'
+      payment_status: method === 'COD' ? 'pending' : (initialStatus === 'pending_payment' ? 'pending' : 'paid'),
+      razorpay_order_id: razorpayOrderId,
+      payment_id: paymentId
     };
 
     const { data: orderData, error: orderError } = await supabase
@@ -300,11 +305,34 @@ const CheckoutPage = () => {
     }
 
     // Clear Cart
+    if (initialStatus !== 'pending_payment') {
+      await clearCart(user.id);
+      await refreshCart();
+      // Redirect to success
+      navigate('/order-success', { state: { order: orderData } });
+    }
+
+    return orderData;
+  };
+
+  const updateOrderToPaid = async (orderId, paymentId) => {
+    const { error } = await supabase
+      .from('orders')
+      .update({
+        status: 'confirmed',
+        payment_status: 'paid',
+        payment_id: paymentId
+      })
+      .eq('id', orderId);
+
+    if (error) throw error;
+
     await clearCart(user.id);
     await refreshCart();
 
-    // Redirect to success
-    navigate('/order-success', { state: { order: orderData } });
+    // Re-fetch order to pass to success page
+    const { data } = await supabase.from('orders').select('*').eq('id', orderId).single();
+    navigate('/order-success', { state: { order: data } });
   };
 
   return (

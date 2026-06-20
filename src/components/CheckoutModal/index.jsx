@@ -167,7 +167,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
         description: `Order of ${cartItems.length} item(s)`,
 
         image:
-          "https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Home%20Page/1.jpeg",
+          "https://res.cloudinary.com/duobc58vr/image/upload/v1781941751/1.jpg_1_gaqvnn.jpg",
 
         prefill: {
           name: shipping.name,

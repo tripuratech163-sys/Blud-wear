@@ -3,7 +3,7 @@ import './AnnouncementBar.css';
 const AnnouncementBar = () => {
   return (
     <div className="announcement-bar">
-      <p>FREE SHIPPING ON ALL ORDERS OVER RS 999 | WORLDWIDE DELIVERY</p>
+      <p>FREE SHIPPING ON ALL ORDERS OVER Rs 999 | All over India</p>
     </div>
   );
 };

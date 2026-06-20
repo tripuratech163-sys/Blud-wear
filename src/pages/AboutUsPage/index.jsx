@@ -95,7 +95,7 @@ const AboutUsPage = () => {
             </div>
             <div className="story-image-block">
               <img 
-                src="https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Home%20Page/1.jpeg" 
+                src="https://res.cloudinary.com/duobc58vr/image/upload/v1781941751/1.jpg_1_gaqvnn.jpg" 
                 alt="BludWear activewear close-up" 
                 className="about-accent-img"
               />

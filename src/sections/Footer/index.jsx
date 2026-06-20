@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="footer-brand">
           <div className="footer-logo">
             <img
-              src="https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/Home%20Page/1.jpeg"
+              src="https://res.cloudinary.com/duobc58vr/image/upload/v1781941751/1.jpg_1_gaqvnn.jpg"
               alt="BludWear"
               className="footer-logo-img"
               onError={(e) => e.target.style.display = 'none'}

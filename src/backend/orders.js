@@ -36,7 +36,7 @@ export const getUserOrders = async (userId) => {
  * Note: In a real production app, this would be tied to a Stripe webhook or Edge Function
  * for security, but this handles the database creation.
  */
-export const createOrder = async (userId, items, totalAmount, shippingAddress) => {
+export const createOrder = async (userId, items, totalAmount, shippingAddress, razorpayOrderId = null) => {
   if (!supabase) throw new Error('Supabase client not initialized');
 
   // 1. Create the order record
@@ -47,7 +47,8 @@ export const createOrder = async (userId, items, totalAmount, shippingAddress) =
         user_id: userId,
         total_amount: totalAmount,
         shipping_address: shippingAddress,
-        status: 'pending'
+        status: 'pending',
+        razorpay_order_id: razorpayOrderId
       }
     ])
     .select()

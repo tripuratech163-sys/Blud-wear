@@ -19,7 +19,7 @@ const BrandStory = () => {
           <div className="visual-block blood-block"></div>
           <div className="visual-image-wrapper">
             <video
-              src="https://pkfdvlpegeasnvtqllkz.supabase.co/storage/v1/object/public/Bludwear/TheBludLine/reel%201.mp4"
+              src="https://res.cloudinary.com/duobc58vr/video/upload/v1781949242/reel_1_xo8nlt.mp4"
               className="story-image"
               autoPlay
               muted

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { adminCreateProduct, adminUpdateProduct, adminFetchProductById } from '../../backend/admin';
+import CloudinaryUpload from '../../components/CloudinaryUpload';
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -216,7 +217,14 @@ const ProductForm = () => {
 
         <div>
           <label style={{ display: 'block', marginBottom: '0.5rem', color: '#888' }}>Main Image URL *</label>
-          <input type="text" name="image" value={formData.image} onChange={handleChange} required placeholder="https://..." style={inputStyle} />
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <input type="text" name="image" value={formData.image} onChange={handleChange} required placeholder="https://..." style={{ ...inputStyle, flex: 1 }} />
+            <CloudinaryUpload 
+              onUploadSuccess={(url) => setFormData(prev => ({ ...prev, image: url }))} 
+              buttonText="Upload File" 
+              style={{ width: '150px' }} 
+            />
+          </div>
           {formData.image && (
             <img src={formData.image} alt="Preview" style={{ marginTop: '1rem', height: '100px', borderRadius: '4px' }} />
           )}
@@ -229,7 +237,12 @@ const ProductForm = () => {
             onChange={(e) => setImagesInput(e.target.value)} 
             rows="4"
             placeholder="https://...image1.jpg&#10;https://...image2.jpg"
-            style={{ ...inputStyle, resize: 'vertical' }}
+            style={{ ...inputStyle, resize: 'vertical', marginBottom: '0.5rem' }}
+          />
+          <CloudinaryUpload 
+            onUploadSuccess={(url) => setImagesInput(prev => prev ? `${prev}\n${url}` : url)} 
+            buttonText="+ Upload Gallery Image" 
+            style={{ width: '200px' }} 
           />
         </div>
 
@@ -271,7 +284,14 @@ const ProductForm = () => {
                 </div>
                 <div style={{ marginTop: '1rem' }}>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: '#888', marginBottom: '0.25rem' }}>Specific Image URL (Optional)</label>
-                  <input type="text" value={variant.image} onChange={(e) => handleVariantChange(index, 'image', e.target.value)} placeholder="Image URL for this color" style={inputStyle} />
+                  <div style={{ display: 'flex', gap: '1rem' }}>
+                    <input type="text" value={variant.image} onChange={(e) => handleVariantChange(index, 'image', e.target.value)} placeholder="Image URL for this color" style={{ ...inputStyle, flex: 1 }} />
+                    <CloudinaryUpload 
+                      onUploadSuccess={(url) => handleVariantChange(index, 'image', url)} 
+                      buttonText="Upload" 
+                      style={{ width: '100px' }} 
+                    />
+                  </div>
                 </div>
               </div>
             ))}
