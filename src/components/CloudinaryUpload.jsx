@@ -1,15 +1,31 @@
 import { useState } from 'react';
+import imageCompression from 'browser-image-compression';
 
 const CloudinaryUpload = ({ onUploadSuccess, buttonText = "Upload Image", style }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+    let file = e.target.files[0];
     if (!file) return;
 
     setIsUploading(true);
     setError(null);
+
+    // --- Automatic Image Compression ---
+    try {
+      const options = {
+        maxSizeMB: 1, // Compress to under 1MB
+        maxWidthOrHeight: 1920, // Max width/height to retain quality
+        useWebWorker: true
+      };
+      
+      // We overwrite the large file with the newly compressed file
+      file = await imageCompression(file, options);
+    } catch (compressErr) {
+      console.warn("Compression failed, uploading original image.", compressErr);
+    }
+    // -----------------------------------
 
     const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
     const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
