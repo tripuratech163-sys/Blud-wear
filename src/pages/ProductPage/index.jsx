@@ -6,6 +6,11 @@ import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { createProductSlug, getProductImages, formatPrice } from '../../utils/helpers';
 import { fetchProductReviews, createProductReview, deleteProductReview } from '../../backend/reviews';
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
 import AnnouncementBar from '../../sections/AnnouncementBar';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
@@ -22,6 +27,9 @@ const ProductPage = () => {
   const [loading, setLoading] = useState(true);
   
   const [activeImage, setActiveImage] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
@@ -192,6 +200,7 @@ const ProductPage = () => {
       }
       setQuantity(1); // Reset quantity when changing color
       setCartStatus('');
+      setActiveImage(-1); // Reset active image to the color variant image
     }
   }, [selectedColor, colorsMap]);
 
@@ -377,7 +386,36 @@ const ProductPage = () => {
   const baseImages = product ? getProductImages(product) : [];
   const colorSpecificImage = selectedColor && colorsMap[selectedColor]?.image && colorsMap[selectedColor].image.trim() ? colorsMap[selectedColor].image.trim() : null;
   // If the color has a specific image override, it takes precedence, else fallback to base gallery
-  const activeSrc = colorSpecificImage || (baseImages[activeImage] || product?.image);
+  const activeSrc = activeImage === -1 && colorSpecificImage ? colorSpecificImage : (baseImages[activeImage] || colorSpecificImage || product?.image);
+
+  // Prepare images for Lightbox
+  const galleryImages = useMemo(() => {
+    let images = [];
+    if (colorSpecificImage) images.push({ src: colorSpecificImage });
+    baseImages.forEach(img => {
+      if (img !== colorSpecificImage) {
+        images.push({ src: img });
+      }
+    });
+    // Fallback if no images
+    if (images.length === 0 && product?.image) {
+      images.push({ src: product.image });
+    }
+    return images;
+  }, [colorSpecificImage, baseImages, product]);
+
+  const handleOpenLightbox = (indexToOpen) => {
+    let targetIndex = 0;
+    if (indexToOpen === -1 && colorSpecificImage) {
+      targetIndex = 0;
+    } else if (indexToOpen >= 0) {
+      const imgSrc = baseImages[indexToOpen];
+      const foundIdx = galleryImages.findIndex(g => g.src === imgSrc);
+      if (foundIdx !== -1) targetIndex = foundIdx;
+    }
+    setLightboxIndex(targetIndex);
+    setLightboxOpen(true);
+  };
 
   const description =
     product?.description ||
@@ -457,11 +495,40 @@ const ProductPage = () => {
                   ))}
                 </div>
 
-                <div className="product-hero-image">
+                <div className="product-hero-image" onClick={() => handleOpenLightbox(activeImage)} style={{ cursor: 'zoom-in' }}>
                   {product.tag && <span className="product-detail-tag">{product.tag}</span>}
                   <img src={activeSrc} alt={product.name} />
                 </div>
               </section>
+
+              <Lightbox
+                open={lightboxOpen}
+                close={() => setLightboxOpen(false)}
+                index={lightboxIndex}
+                slides={galleryImages}
+                plugins={[Zoom, Thumbnails]}
+                zoom={{
+                  maxZoomPixelRatio: 3,
+                  zoomInMultiplier: 2,
+                  doubleTapDelay: 300,
+                  doubleClickDelay: 300,
+                  doubleClickMaxStops: 2,
+                  keyboardMoveDistance: 50,
+                  wheelZoomDistanceFactor: 100,
+                  pinchZoomDistanceFactor: 100,
+                  scrollToZoom: true,
+                }}
+                thumbnails={{
+                  position: "bottom",
+                  width: 120,
+                  height: 80,
+                  border: 1,
+                  borderRadius: 4,
+                  padding: 4,
+                  gap: 16,
+                  imageFit: "cover",
+                }}
+              />
 
               <section className="product-panel">
                 <p className="product-detail-category">{product.gender} / {product.category}</p>
