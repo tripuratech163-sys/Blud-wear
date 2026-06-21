@@ -483,12 +483,20 @@
     margin: 0;
   }
   
+  .timeline-steps {
+    gap: 2px;
+  }
+  
   .timeline-step {
     width: auto;
+    flex: 1;
   }
   
   .step-label {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
+    line-height: 1.2;
+    word-wrap: break-word;
+    text-align: center;
   }
 }
 
