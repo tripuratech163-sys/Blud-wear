@@ -180,11 +180,9 @@ const CheckoutPage = () => {
         throw new Error("Please fill all required shipping fields.");
       }
 
-      let finalOrderId = null;
-
       if (paymentMethod === 'COD') {
-        const order = await saveOrder('COD', null, null);
-        finalOrderId = order.id;
+        const order = await saveOrder('COD', null, null, 'confirmed');
+        await finalizeOrderFulfillment(order);
       } else {
         // Razorpay flow
         const methodParam = paymentMethod.toLowerCase(); // 'upi' or 'card'
@@ -228,34 +226,11 @@ const CheckoutPage = () => {
 
         // Step 4: Update order to 'paid' in Supabase
         await updateOrderToPaid(pendingOrder.id, paymentResult.razorpay_payment_id);
-        finalOrderId = pendingOrder.id;
+        
+        // Re-fetch updated order to pass to success page
+        const { data: updatedOrder } = await supabase.from('orders').select('*').eq('id', pendingOrder.id).single();
+        await finalizeOrderFulfillment(updatedOrder);
       }
-
-      // --- AUTOMATIC SHIPROCKET BOOKING ---
-      if (finalOrderId) {
-        try {
-          console.log("Automatically booking shipment with Shiprocket...");
-          const token = (await supabase.auth.getSession()).data.session?.access_token;
-          await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/book-shiprocket-shipment`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-              Authorization: `Bearer ${token || import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            },
-            body: JSON.stringify({
-              order_id: finalOrderId,
-              weight: 0.5,
-              dimensions: { length: 10, width: 10, height: 10 }
-            })
-          });
-        } catch (shiprocketErr) {
-          console.error("Failed to automatically book on Shiprocket:", shiprocketErr);
-          // We do not block the order success page if Shiprocket fails. 
-          // The admin can manually retry from the admin panel.
-        }
-      }
-      // ------------------------------------
 
     } catch (err) {
       console.error("Checkout Error:", err);
@@ -315,6 +290,20 @@ const CheckoutPage = () => {
 
     if (itemsError) throw itemsError;
 
+    return orderData;
+  };
+
+  const finalizeOrderFulfillment = async (orderData) => {
+    // Re-create the orderItemsPayload needed for deduction
+    const orderItemsPayload = cartItems.map(item => ({
+      order_id: orderData.id,
+      product_id: item.products.id,
+      quantity: item.quantity,
+      price_at_time: item.products.price,
+      size: item.size || null,
+      color: item.color || null
+    }));
+
     // Deduct stock inventory for placed order items
     try {
       await deductOrderItems(orderItemsPayload);
@@ -324,26 +313,29 @@ const CheckoutPage = () => {
 
     // Auto-book on Shiprocket (Silently fail if Shiprocket is down)
     try {
-      await supabase.functions.invoke('book-shiprocket-shipment', {
-        body: { 
+      console.log("Automatically booking shipment with Shiprocket...");
+      const token = (await supabase.auth.getSession()).data.session?.access_token;
+      await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/book-shiprocket-shipment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${token || import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
           order_id: orderData.id,
           weight: 0.5,
           dimensions: { length: 10, width: 10, height: 10 }
-        }
+        })
       });
     } catch (shiprocketErr) {
-      console.error("Auto-booking on Shiprocket failed:", shiprocketErr);
+      console.error("Failed to automatically book on Shiprocket:", shiprocketErr);
     }
 
-    // Clear Cart
-    if (initialStatus !== 'pending_payment') {
-      await clearCart(user.id);
-      await refreshCart();
-      // Redirect to success
-      navigate('/order-success', { state: { order: orderData } });
-    }
-
-    return orderData;
+    // Clear Cart & Redirect
+    await clearCart(user.id);
+    await refreshCart();
+    navigate('/order-success', { state: { order: orderData } });
   };
 
   const updateOrderToPaid = async (orderId, paymentId) => {
@@ -357,13 +349,6 @@ const CheckoutPage = () => {
       .eq('id', orderId);
 
     if (error) throw error;
-
-    await clearCart(user.id);
-    await refreshCart();
-
-    // Re-fetch order to pass to success page
-    const { data } = await supabase.from('orders').select('*').eq('id', orderId).single();
-    navigate('/order-success', { state: { order: data } });
   };
 
   return (
