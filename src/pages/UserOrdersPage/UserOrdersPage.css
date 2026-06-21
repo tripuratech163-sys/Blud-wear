@@ -274,9 +274,10 @@
 }
 
 .timeline-line-fill {
+  width: var(--progress);
   height: 100%;
   background: linear-gradient(90deg, var(--color-blood-main), var(--color-blood-light));
-  transition: width 0.8s ease;
+  transition: width 0.8s ease, height 0.8s ease;
 }
 
 .timeline-steps {
@@ -480,23 +481,41 @@
   }
   
   .timeline-progress-bar {
-    margin: 0;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  
+  .timeline-line {
+    width: 4px;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 9px; /* Centers line on the 22px dot (16px + 3px*2 border) */
+    transform: none;
+  }
+
+  .timeline-line-fill {
+    width: 100%;
+    height: var(--progress);
+    background: linear-gradient(180deg, var(--color-blood-main), var(--color-blood-light));
   }
   
   .timeline-steps {
-    gap: 2px;
+    flex-direction: column;
+    gap: 2rem;
   }
   
   .timeline-step {
-    width: auto;
-    flex: 1;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
   }
   
   .step-label {
-    font-size: 0.55rem;
-    line-height: 1.2;
-    word-wrap: break-word;
-    text-align: center;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    word-wrap: normal;
+    text-align: left;
   }
 }
 

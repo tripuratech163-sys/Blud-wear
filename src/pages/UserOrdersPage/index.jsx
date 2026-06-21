@@ -249,7 +249,7 @@ const UserOrdersPage = () => {
                               <div className="timeline-line">
                                 <div 
                                   className="timeline-line-fill cancelled-fill" 
-                                  style={{ width: '100%' }}
+                                  style={{ '--progress': '100%' }}
                                 ></div>
                               </div>
                               <div className="timeline-steps">
@@ -278,7 +278,7 @@ const UserOrdersPage = () => {
                               <div className="timeline-line">
                                 <div 
                                   className="timeline-line-fill returned-fill" 
-                                  style={{ width: `${(returnStep / 3) * 100}%` }}
+                                  style={{ '--progress': `${(returnStep / 3) * 100}%` }}
                                 ></div>
                               </div>
                               <div className="timeline-steps">
@@ -340,7 +340,7 @@ const UserOrdersPage = () => {
                               <div className="timeline-line">
                                 <div 
                                   className="timeline-line-fill" 
-                                  style={{ width: `${(normalStep / 4) * 100}%` }}
+                                  style={{ '--progress': `${(normalStep / 4) * 100}%` }}
                                 ></div>
                               </div>
                               <div className="timeline-steps">
