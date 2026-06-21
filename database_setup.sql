@@ -87,9 +87,11 @@ CREATE POLICY "Allow public to insert orders"
   TO anon
   WITH CHECK (true); -- Allow guest checkout
 
--- For the Admin panel, we temporarily allow all authenticated users to manage all orders. 
-CREATE POLICY "Allow authenticated to manage all orders"
-  ON public.orders FOR ALL
-  TO authenticated
-  USING (true)
-  WITH CHECK (true);
+-- Secure Admin Policy: Only allow specific admin email to view and manage all orders
+DROP POLICY IF EXISTS "Allow authenticated to manage all orders" ON public.orders;
+
+CREATE POLICY "Admins can view and manage all orders" 
+ON public.orders 
+FOR ALL 
+USING (auth.jwt() ->> 'email' IN ('wearblud@gmail.com'))
+WITH CHECK (auth.jwt() ->> 'email' IN ('wearblud@gmail.com'));
