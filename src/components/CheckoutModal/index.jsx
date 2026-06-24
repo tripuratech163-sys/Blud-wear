@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -38,14 +38,35 @@ const CheckoutModal = ({ isOpen, onClose }) => {
   const [checkoutError, setCheckoutError] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('upi'); // 'upi', 'card', 'netbanking', 'cod'
 
+  // Promo code states
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState(null);
+  const [promoError, setPromoError] = useState('');
+  const [promoSuccess, setPromoSuccess] = useState('');
+  const [applyingPromo, setApplyingPromo] = useState(false);
+
   // Shipping calculation state
   const [shippingCost, setShippingCost] = useState(0);
   const [isCalculatingShipping, setIsCalculatingShipping] = useState(false);
 
-  // Auto-advance step if already logged in
+  // Auto-advance step if already logged in and reset states when opened
   useEffect(() => {
     if (isOpen) {
       setCheckoutError('');
+      setPromoCode('');
+      setAppliedDiscount(null);
+      setPromoSuccess('');
+      setPromoError('');
+      setShipping({
+        name: '',
+        phone: '',
+        address: '',
+        city: '',
+        state: '',
+        pincode: ''
+      });
+      setShippingCost(0);
+
       if (user) {
         setStep(2);
       } else {
@@ -85,16 +106,92 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     fetchShipping();
   }, [shipping.pincode, selectedPayment, cartItems.length]);
 
-  if (!isOpen) return null;
+
+
+  // Check if a Top and a Bottom are in the cart to qualify for auto-bundle discount
+  const hasBundle = useMemo(() => {
+    let hasTopOrOuterwear = false;
+    let hasBottom = false;
+    cartItems.forEach(item => {
+      const cat = item.products.category?.toLowerCase() || '';
+      if (cat === 'tops' || cat === 'outerwear') {
+        hasTopOrOuterwear = true;
+      }
+      if (cat === 'bottoms') {
+        hasBottom = true;
+      }
+    });
+    return hasTopOrOuterwear && hasBottom;
+  }, [cartItems]);
+
+  const activeDiscount = useMemo(() => {
+    if (appliedDiscount) return appliedDiscount;
+    if (hasBundle) {
+      return { code: 'BUNDLE15 (Auto)', type: 'percent', value: 15 };
+    }
+    return null;
+  }, [appliedDiscount, hasBundle]);
 
   // Pricing calculations
   const basePrice = cartItems.reduce((acc, item) => {
     const priceNum = Number(item.products.price.replace(/[^0-9.-]+/g, "")) || 0;
     return acc + (priceNum * item.quantity);
   }, 0);
-  const gstAmount = 0;
-  const finalTotal = basePrice + shippingCost;
 
+  const discountAmount = activeDiscount 
+    ? activeDiscount.type === 'percent' 
+      ? basePrice * (activeDiscount.value / 100) 
+      : activeDiscount.value
+    : 0;
+
+  const discountedBasePrice = Math.max(0, basePrice - discountAmount);
+  const gstAmount = 0;
+  const finalTotal = discountedBasePrice + shippingCost;
+
+
+  const handleApplyPromo = async (e) => {
+    e.preventDefault();
+    setPromoError('');
+    setPromoSuccess('');
+    
+    const code = promoCode.trim().toUpperCase();
+    if (!code) return;
+
+    if (code === 'BUNDLE15' && hasBundle) {
+      setAppliedDiscount({ code: 'BUNDLE15', type: 'percent', value: 15 });
+      setPromoSuccess('Promo code BUNDLE15 applied! 15% discount dynamic recalculation.');
+      return;
+    }
+
+    setApplyingPromo(true);
+    try {
+      const { data, error } = await supabase.from('coupons').select('*').eq('code', code).maybeSingle();
+      if (error || !data) throw new Error('Invalid coupon code.');
+      if (data.used) throw new Error('This coupon has already been used.');
+
+      setAppliedDiscount({ 
+        id: data.id, code: data.code, type: data.discount_type, value: Number(data.discount_value) 
+      });
+      setPromoSuccess(`Promo code ${data.code} applied successfully!`);
+    } catch (err) {
+      setPromoError(err.message || 'Invalid coupon code.');
+      setAppliedDiscount(null);
+    } finally {
+      setApplyingPromo(false);
+    }
+  };
+
+  const markCouponAsUsed = async () => {
+    if (appliedDiscount && appliedDiscount.id) {
+      try {
+        await supabase.from('coupons').update({ used: true }).eq('id', appliedDiscount.id);
+      } catch (err) {
+        console.error("Failed to mark coupon as used:", err);
+      }
+    }
+  };
+
+  if (!isOpen) return null;
 
   // --- Auth handlers ---
   const handleSendOtp = async (e) => {
@@ -191,6 +288,8 @@ const CheckoutModal = ({ isOpen, onClose }) => {
 
       // Step 4: Save order to Supabase after successful payment
       await saveOrder(method === 'upi' ? 'UPI' : method === 'card' ? 'Card' : 'Netbanking', paymentResult.razorpay_payment_id, paymentResult.razorpay_order_id);
+      
+      await markCouponAsUsed();
 
     } catch (err) {
       if (err.message === 'Payment cancelled by user') {
@@ -208,6 +307,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     setProcessing(true);
     try {
       await saveOrder('COD', null, null);
+      await markCouponAsUsed();
     } catch (err) {
       setCheckoutError(err.message || "Order failed. Please try again.");
       setProcessing(false);
@@ -221,7 +321,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
       total_amount: finalTotal,
       subtotal: basePrice,
       gst_amount: gstAmount,
-      discount_amount: 0,
+      discount_amount: discountAmount,
       status: 'confirmed',
       shipping_name: shipping.name,
       shipping_phone: shipping.phone,
@@ -323,6 +423,12 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                 <span>Item Total (MRP)</span>
                 <span>₹{basePrice.toFixed(2)}</span>
               </div>
+              {activeDiscount && (
+                <div className="c-price-row" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                  <span>Discount ({activeDiscount.code})</span>
+                  <span>-₹{discountAmount.toFixed(2)}</span>
+                </div>
+              )}
 
               <div className="c-price-row c-price-delivery">
                 <span>🚚 Delivery Charges</span>
@@ -456,6 +562,15 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                   <div className="c-processing-overlay" style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', width: '100%', padding: '1rem 0' }}>
                     <div className="c-spinner"></div>
                     <p style={{ margin: '0.5rem 0', fontWeight: 'bold' }}>Secure Payment Portal</p>
+                    
+                    {/* IMPORTANT PAYMENT WARNING */}
+                    <div style={{ backgroundColor: 'rgba(255, 204, 0, 0.1)', border: '1px solid #ffcc00', color: '#ffcc00', padding: '1rem', borderRadius: '4px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '1rem', width: '100%', textAlign: 'left' }}>
+                      <div>
+                        <span style={{ display: 'block', fontSize: '0.9rem' }}>WARNING: DO NOT REFRESH OR CLOSE THIS PAGE.</span>
+                        <span style={{ fontSize: '0.8rem', fontWeight: 'normal', color: '#ccc' }}>Refreshing the page will cause your payment to get stuck or cancelled.</span>
+                      </div>
+                    </div>
+
                     {checkoutError && <div className="c-error" style={{ marginBottom: '1rem' }}>{checkoutError}</div>}
                     <div id="razorpay-embed-container" style={{ width: '100%', minHeight: '450px', background: '#0a0a0a', border: '1px solid #222', borderRadius: '4px' }}></div>
                     {selectedPayment !== 'cod' && (
@@ -473,20 +588,36 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                   </div>
                 ) : (
                   <>
+                    <h3 style={{ marginBottom: '0.5rem' }}>Have a Coupon Code?</h3>
+                    <form onSubmit={handleApplyPromo} style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                      <input
+                        type="text"
+                        placeholder="ENTER CODE"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                        maxLength="20"
+                        style={{ flex: 1, padding: '0.75rem', backgroundColor: '#111', border: '1px solid #333', color: '#fff', borderRadius: '4px', textTransform: 'uppercase' }}
+                      />
+                      <button 
+                        type="submit" 
+                        disabled={applyingPromo}
+                        style={{ padding: '0.75rem 1.5rem', backgroundColor: '#fff', color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: applyingPromo ? 'not-allowed' : 'pointer' }}
+                      >
+                        {applyingPromo ? 'Applying...' : 'Apply'}
+                      </button>
+                    </form>
+                    {promoError && <p style={{ color: '#ff3b30', fontSize: '0.85rem', marginTop: '-1rem', marginBottom: '1rem' }}>{promoError}</p>}
+                    {promoSuccess && <p style={{ color: '#2ecc71', fontSize: '0.85rem', marginTop: '-1rem', marginBottom: '1rem' }}>{promoSuccess}</p>}
+                    {hasBundle && !appliedDiscount && (
+                      <p style={{ color: '#2ecc71', fontSize: '0.85rem', marginTop: '-1rem', marginBottom: '1rem' }}>🎉 Bundle Kit detected! Automatic 15% discount applied.</p>
+                    )}
+
                     <h3>Choose Payment</h3>
                     <div className="c-order-review">
                       <p><strong>{shipping.name}</strong></p>
                       <p>{shipping.address}, {shipping.city} - {shipping.pincode}</p>
                     </div>
-                    <div className="c-payment-total">
-                      <div className="c-payment-breakup">
-                        <div className="c-pb-row"><span>Item Total</span><span>₹{basePrice.toFixed(2)}</span></div>
-
-                        <div className="c-pb-row"><span>Delivery</span>{isCalculatingShipping ? <span>Calculating...</span> : (shippingCost === 0 ? <span className="c-free-tag">Enter Pincode</span> : <span>₹{shippingCost.toFixed(2)}</span>)}</div>
-                        <div className="c-pb-divider" />
-                        <div className="c-pb-row c-pb-total"><span>Total to pay</span><strong>₹{finalTotal.toFixed(2)}</strong></div>
-                      </div>
-                    </div>
+                    
                     <div className="c-payment-options-grid">
                       <div 
                         className={`c-payment-card ${selectedPayment === 'upi' ? 'active' : ''}`}
@@ -533,9 +664,16 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                       </div>
                     </div>
 
+                    {/* IMPORTANT WARNING BEFORE CLICKING PAY */}
+                    <div style={{ backgroundColor: 'rgba(255, 59, 48, 0.1)', border: '1px solid #ff3b30', color: '#ff3b30', padding: '1rem', borderRadius: '4px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', marginTop: '1.5rem' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                      <div>
+                        <span style={{ display: 'block', fontSize: '0.85rem' }}>ONCE PAYMENT STARTS, DO NOT REFRESH OR HIT BACK</span>
+                      </div>
+                    </div>
+
                     <button 
                       className="c-btn-primary" 
-                      style={{ marginTop: '2rem' }}
                       onClick={() => {
                         if (selectedPayment === 'cod') {
                           handleCOD();

@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         .from('admin_users')
         .select('user_id')
         .eq('user_id', currentUser.id)
-        .single();
+        .maybeSingle();
       
       if (data && !error) {
         setIsAdmin(true);

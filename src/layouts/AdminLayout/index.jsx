@@ -54,6 +54,12 @@ const AdminLayout = () => {
           >
             Review Videos
           </Link>
+          <Link 
+            to="/admin/coupons" 
+            className={`admin-nav-link ${location.pathname.startsWith('/admin/coupons') ? 'active' : ''}`}
+          >
+            Coupons
+          </Link>
         </nav>
         <div className="admin-sidebar-footer">
           <button onClick={handleSignOut} className="admin-signout-btn">
@@ -73,6 +79,7 @@ const AdminLayout = () => {
             {location.pathname.includes('/orders') && 'Orders Management'}
             {location.pathname.includes('/queries') && 'Customer Queries'}
             {location.pathname.includes('/videos') && 'Review Videos'}
+            {location.pathname.includes('/coupons') && 'Manage Coupons'}
           </h1>
         </header>
         <div className="admin-content">

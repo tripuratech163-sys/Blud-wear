@@ -115,6 +115,13 @@ serve(async (req) => {
       // Set SHIPROCKET_PICKUP_LOCATION secret if your warehouse isn't named "Primary"
       const pickupLocation = Deno.env.get("SHIPROCKET_PICKUP_LOCATION") || "Primary";
 
+      // Calculate the billing breakdown
+      const subtotal = Number(order.subtotal) || Number(order.total_amount) || 0;
+      const discountAmount = Number(order.discount_amount) || 0;
+      const totalAmount = Number(order.total_amount) || 0;
+      // Formula: total = subtotal - discount + shipping
+      const shippingCharges = Math.max(0, totalAmount - subtotal + discountAmount);
+
       const shiprocketPayload = {
         order_id: shortOrderId,
         order_date: new Date(order.created_at).toISOString().slice(0, 19).replace("T", " "),
@@ -131,7 +138,9 @@ serve(async (req) => {
         shipping_is_billing: true,
         order_items: orderItems,
         payment_method: order.payment_method === "COD" ? "COD" : "Prepaid",
-        sub_total: Number(order.total_amount) || 0,
+        sub_total: subtotal,
+        discount: discountAmount,
+        shipping_charges: shippingCharges,
         length: dimensions?.length || 10,
         breadth: dimensions?.width || 10,
         height: dimensions?.height || 10,

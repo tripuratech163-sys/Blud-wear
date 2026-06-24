@@ -36,6 +36,7 @@ import AdminProductForm from './pages/Admin/ProductForm';
 import AdminOrdersList from './pages/Admin/OrdersList';
 import AdminQueriesList from './pages/Admin/QueriesList';
 import AdminVideosList from './pages/Admin/VideosList';
+import AdminCouponsList from './pages/Admin/CouponsList';
 
 // Global Components
 import CartDrawer from './components/CartDrawer';
@@ -93,6 +94,7 @@ function App() {
           <Route path="orders" element={<AdminOrdersList />} />
           <Route path="queries" element={<AdminQueriesList />} />
           <Route path="videos" element={<AdminVideosList />} />
+          <Route path="coupons" element={<AdminCouponsList />} />
         </Route>
       </Routes>
       <CartDrawer />
