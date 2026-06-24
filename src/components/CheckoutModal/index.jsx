@@ -596,12 +596,12 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value)}
                         maxLength="20"
-                        style={{ flex: 1, padding: '0.75rem', backgroundColor: '#111', border: '1px solid #333', color: '#fff', borderRadius: '4px', textTransform: 'uppercase' }}
+                        style={{ flex: 1, padding: '0.8rem', backgroundColor: '#fff', border: '1px solid #ccc', color: '#000', borderRadius: '6px', textTransform: 'uppercase', outline: 'none' }}
                       />
                       <button 
                         type="submit" 
                         disabled={applyingPromo}
-                        style={{ padding: '0.75rem 1.5rem', backgroundColor: '#fff', color: '#000', border: 'none', borderRadius: '4px', fontWeight: 'bold', cursor: applyingPromo ? 'not-allowed' : 'pointer' }}
+                        style={{ padding: '0.8rem 1.5rem', backgroundColor: '#000', color: '#fff', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: applyingPromo ? 'not-allowed' : 'pointer', transition: 'opacity 0.2s' }}
                       >
                         {applyingPromo ? 'Applying...' : 'Apply'}
                       </button>
