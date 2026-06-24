@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import './styles/App.css';
 
 // Pages
@@ -68,7 +69,7 @@ function App() {
   const { isCheckoutOpen, closeCheckout } = useCart();
 
   return (
-    <>
+    <HelmetProvider>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/collection" element={<CollectionPage />} />
@@ -100,7 +101,7 @@ function App() {
       <CartDrawer />
       <CheckoutModal isOpen={isCheckoutOpen} onClose={closeCheckout} />
       <MobileBottomDock />
-    </>
+    </HelmetProvider>
   );
 }
 

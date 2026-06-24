@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { addToCart } from '../../backend/cart';
 import { fetchProducts } from '../../backend/products';
 import { useAuth } from '../../context/AuthContext';
@@ -452,6 +453,12 @@ const ProductPage = () => {
 
   return (
     <div className="product-page">
+      {product && (
+        <Helmet>
+          <title>{`${product.name} | BludWear`}</title>
+          <meta name="description" content={product.description || `Buy ${product.name} at BludWear. Premium performance gear designed for athletes.`} />
+        </Helmet>
+      )}
       <AnnouncementBar />
       <Navbar />
 
