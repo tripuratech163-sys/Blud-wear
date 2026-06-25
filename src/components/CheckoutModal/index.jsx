@@ -606,7 +606,7 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                         {applyingPromo ? 'Applying...' : 'Apply'}
                       </button>
                     </form>
-                    {promoError && <p style={{ color: '#ff3b30', fontSize: '0.85rem', marginTop: '-1rem', marginBottom: '1rem' }}>{promoError}</p>}
+                    {promoError && <p style={{ color: '#745756ff', fontSize: '0.85rem', marginTop: '-1rem', marginBottom: '1rem' }}>{promoError}</p>}
                     {promoSuccess && <p style={{ color: '#2ecc71', fontSize: '0.85rem', marginTop: '-1rem', marginBottom: '1rem' }}>{promoSuccess}</p>}
                     {hasBundle && !appliedDiscount && (
                       <p style={{ color: '#2ecc71', fontSize: '0.85rem', marginTop: '-1rem', marginBottom: '1rem' }}>🎉 Bundle Kit detected! Automatic 15% discount applied.</p>

@@ -95,12 +95,18 @@ serve(async (req) => {
       }
 
       // Step B: Map payload
-      const orderItems = (order.order_items || []).map((item: any) => ({
-        name: item.products?.name || "Product Item",
-        sku: item.products?.name?.toLowerCase().replace(/[^a-z0-9]/g, "-") || "sku",
-        units: item.quantity,
-        selling_price: Number(String(item.price_at_time).replace(/[^0-9.-]+/g, "")) || 0
-      }));
+      const orderItems = (order.order_items || []).map((item: any) => {
+        const baseName = item.products?.name || "Product Item";
+        const sizePart = item.size ? ` (Size: ${item.size})` : "";
+        const colorPart = item.color ? ` (Color: ${item.color})` : "";
+        const fullName = `${baseName}${sizePart}${colorPart}`;
+        return {
+          name: fullName,
+          sku: `${item.products?.name?.toLowerCase().replace(/[^a-z0-9]/g, "-") || "sku"}${item.size ? `-${item.size.toLowerCase()}` : ""}${item.color ? `-${item.color.toLowerCase()}` : ""}`,
+          units: item.quantity,
+          selling_price: Number(String(item.price_at_time).replace(/[^0-9.-]+/g, "")) || 0
+        };
+      });
 
       // Map shipping address details
       const addressString = order.shipping_address || "Address Line 1";
