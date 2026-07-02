@@ -1,19 +1,18 @@
 import { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import './SustainabilityPage.css';
 
 const SustainabilityPage = () => {
-  useEffect(() => {
-    document.title = "Sustainability & Sourcing | BludWear — Ethical Performance";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", "Explore BludWear's sustainability pillars. Learn about our ethical production, recycled fibers, zero-plastic packaging, and carbon offset logistics.");
-    }
-  }, []);
 
   return (
     <div className="sustain-page-wrapper">
+      <Helmet>
+        <title>Sustainability & Sourcing | BludWear — Ethical Performance</title>
+        <meta name="description" content="Explore BludWear's sustainability pillars. Learn about our ethical production, recycled fibers, zero-plastic packaging, and carbon offset logistics." />
+        <link rel="canonical" href="https://www.bludwear.com/sustainability" />
+      </Helmet>
       <Navbar />
       
       <main className="sustain-main-content">

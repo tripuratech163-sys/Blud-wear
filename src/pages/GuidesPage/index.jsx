@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import { optimizeImageUrl } from '../../data/products';
@@ -111,24 +112,19 @@ const GuidesPage = () => {
 
   const activeGuide = slug ? guidesData.find(g => g.slug === slug) : null;
 
-  useEffect(() => {
-    if (activeGuide) {
-      document.title = activeGuide.metaTitle;
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute("content", activeGuide.metaDesc);
-      }
-    } else {
-      document.title = "Expert Training Guides & Science | BludWear";
-      const metaDesc = document.querySelector('meta[name="description"]');
-      if (metaDesc) {
-        metaDesc.setAttribute("content", "Browse BludWear's collection of expert training guides. Learn about fabric specifications, compression science, and cold-weather preparation.");
-      }
-    }
-  }, [activeGuide]);
+
+
+  const title = activeGuide ? activeGuide.metaTitle : "Expert Training Guides & Science | BludWear";
+  const desc = activeGuide ? activeGuide.metaDesc : "Browse BludWear's collection of expert training guides. Learn about fabric specifications, compression science, and cold-weather preparation.";
+  const canonicalUrl = activeGuide ? `https://www.bludwear.com/guides/${activeGuide.slug}` : "https://www.bludwear.com/guides";
 
   return (
     <div className="guides-page-wrapper">
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={desc} />
+        <link rel="canonical" href={canonicalUrl} />
+      </Helmet>
       <Navbar />
 
       <main className="guides-main container">

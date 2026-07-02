@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { fetchProducts } from '../../backend/products';
 import { createProductSlug, getProductImages, formatPrice } from '../../utils/helpers';
 import AnnouncementBar from '../../sections/AnnouncementBar';
@@ -123,16 +124,7 @@ const CollectionPage = () => {
 
   // Dynamic SEO Title, Meta Description and ItemList JSON-LD Schema
   useEffect(() => {
-    // 1. Dynamic Page Title
-    document.title = `${tabLabel} | BludWear Athleisure`;
-
-    // 2. Dynamic Meta Description
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", `Explore the BludWear ${tabLabel}. Premium luxury athleisure engineered for performance and styled with industrial aesthetics.`);
-    }
-
-    // 3. Dynamic JSON-LD ItemList Schema
+    // Dynamic JSON-LD ItemList Schema
     if (flattenedProducts.length === 0) return;
 
     let schemaScript = document.getElementById('jsonld-collection-schema');
@@ -188,6 +180,11 @@ const CollectionPage = () => {
 
   return (
     <div className="col-page">
+      <Helmet>
+        <title>{`${tabLabel} | BludWear Athleisure`}</title>
+        <meta name="description" content={`Explore the BludWear ${tabLabel}. Premium luxury athleisure engineered for performance and styled with industrial aesthetics.`} />
+        <link rel="canonical" href={`https://www.bludwear.com/collection${categoryParam ? `?category=${categoryParam}` : ''}`} />
+      </Helmet>
       <AnnouncementBar />
       <Navbar />
 

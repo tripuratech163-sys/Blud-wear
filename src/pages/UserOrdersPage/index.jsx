@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../../context/AuthContext';
 import { getUserOrders, cancelUserOrder, requestOrderReturn } from '../../backend/orders';
 import { formatPrice, createProductSlug, getProductImages } from '../../utils/helpers';
@@ -157,6 +158,10 @@ const UserOrdersPage = () => {
 
   return (
     <div className="orders-page">
+      <Helmet>
+        <title>My Orders | BludWear</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <AnnouncementBar />
       <Navbar />
 

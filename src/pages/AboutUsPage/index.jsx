@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import { fetchTopReviews } from '../../backend/reviews';
@@ -38,12 +39,6 @@ const AboutUsPage = () => {
   const [testimonials, setTestimonials] = useState(staticTestimonials);
 
   useEffect(() => {
-    document.title = "About Us & Manifesto | BludWear — Premium Athleisure";
-    const metaDesc = document.querySelector('meta[name="description"]');
-    if (metaDesc) {
-      metaDesc.setAttribute("content", "Learn about BludWear's commitment to high-performance sportswear. Built with premium GSM fabrics and athletic compression for modern warriors.");
-    }
-
     const loadTestimonials = async () => {
       try {
         const dbReviews = await fetchTopReviews(3);
@@ -68,6 +63,11 @@ const AboutUsPage = () => {
 
   return (
     <div className="about-page-wrapper">
+      <Helmet>
+        <title>About Us & Manifesto | BludWear — Premium Athleisure</title>
+        <meta name="description" content="Learn about BludWear's commitment to high-performance sportswear. Built with premium GSM fabrics and athletic compression for modern warriors." />
+        <link rel="canonical" href="https://www.bludwear.com/about" />
+      </Helmet>
       <Navbar />
       
       <main className="about-main-content">

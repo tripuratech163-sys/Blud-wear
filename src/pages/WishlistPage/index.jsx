@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { getWishlist, toggleWishlist } from '../../backend/wishlist';
@@ -52,6 +53,10 @@ const WishlistPage = () => {
 
   return (
     <div className="wishlist-page">
+      <Helmet>
+        <title>My Wishlist | BludWear</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <AnnouncementBar />
       <Navbar />
 

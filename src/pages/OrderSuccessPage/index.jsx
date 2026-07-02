@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import './OrderSuccessPage.css';
@@ -13,6 +14,10 @@ const OrderSuccessPage = () => {
   if (!order) {
     return (
       <div className="order-success-page">
+        <Helmet>
+          <title>Order Confirmed | BludWear</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Helmet>
         <Navbar />
         <main className="success-main container">
           <div className="success-card">
@@ -30,6 +35,10 @@ const OrderSuccessPage = () => {
 
   return (
     <div className="order-success-page">
+      <Helmet>
+        <title>Order Confirmed | BludWear</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <Navbar />
       
       <main className="success-main container">

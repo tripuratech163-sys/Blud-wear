@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../lib/supabase';
+import { Helmet } from 'react-helmet-async';
 import AnnouncementBar from '../../sections/AnnouncementBar';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
@@ -49,6 +50,11 @@ const ContactUs = () => {
 
   return (
     <div className="contact-us-page">
+      <Helmet>
+        <title>Contact Us | BludWear Athleisure</title>
+        <meta name="description" content="Have a query about sizing, materials, or order tracking? Reach out to the BludWear customer team. Support available Mon-Sat." />
+        <link rel="canonical" href="https://www.bludwear.com/contact-us" />
+      </Helmet>
       <AnnouncementBar />
       <Navbar />
 

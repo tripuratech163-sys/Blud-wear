@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import { supabase } from '../../lib/supabase';
@@ -108,6 +109,10 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
+      <Helmet>
+        <title>Login / Sign Up | BludWear</title>
+        <meta name="robots" content="noindex, nofollow" />
+      </Helmet>
       <Navbar />
 
       <main className="login-main">

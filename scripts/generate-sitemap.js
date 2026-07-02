@@ -31,6 +31,8 @@ const createProductSlug = (product) => {
     .replace(/^-|-$/g, '');
 };
 
+const today = new Date().toISOString().split('T')[0];
+
 async function generateSitemap() {
   console.log("Generating sitemap...");
   try {
@@ -41,14 +43,16 @@ async function generateSitemap() {
 
     if (error) throw error;
 
-    // Static routes
+    // Static routes with priority and changefreq
     const staticRoutes = [
-      '',
-      '/collection',
-      '/about',
-      '/contact-us',
-      '/sustainability',
-      '/guides'
+      { path: '', priority: '1.0', changefreq: 'daily' },
+      { path: '/collection', priority: '0.9', changefreq: 'daily' },
+      { path: '/collection?category=men', priority: '0.8', changefreq: 'daily' },
+      { path: '/collection?category=women', priority: '0.8', changefreq: 'daily' },
+      { path: '/about', priority: '0.7', changefreq: 'monthly' },
+      { path: '/contact-us', priority: '0.6', changefreq: 'monthly' },
+      { path: '/sustainability', priority: '0.7', changefreq: 'monthly' },
+      { path: '/guides', priority: '0.8', changefreq: 'weekly' },
     ];
 
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
@@ -57,9 +61,10 @@ async function generateSitemap() {
     // Add static routes
     for (const route of staticRoutes) {
       xml += `  <url>\n`;
-      xml += `    <loc>${BASE_URL}${route}</loc>\n`;
-      xml += `    <changefreq>weekly</changefreq>\n`;
-      xml += `    <priority>${route === '' ? '1.0' : '0.8'}</priority>\n`;
+      xml += `    <loc>${BASE_URL}${route.path}</loc>\n`;
+      xml += `    <lastmod>${today}</lastmod>\n`;
+      xml += `    <changefreq>${route.changefreq}</changefreq>\n`;
+      xml += `    <priority>${route.priority}</priority>\n`;
       xml += `  </url>\n`;
     }
 
@@ -72,7 +77,7 @@ async function generateSitemap() {
         // Format lastmod correctly if available
         const lastmod = product.created_at 
           ? new Date(product.created_at).toISOString().split('T')[0]
-          : new Date().toISOString().split('T')[0];
+          : today;
 
         xml += `  <url>\n`;
         xml += `    <loc>${BASE_URL}/products/${slug}</loc>\n`;
@@ -85,17 +90,24 @@ async function generateSitemap() {
 
     xml += `</urlset>`;
 
-    // Ensure dist directory exists
+    const totalUrls = staticRoutes.length + (products?.length || 0);
+
+    // Write to dist/ (for production builds)
     const distPath = path.resolve(__dirname, '../dist');
     if (!fs.existsSync(distPath)) {
       console.warn("Dist directory not found! Ensure this script runs after vite build.");
       fs.mkdirSync(distPath, { recursive: true });
     }
+    const distSitemapPath = path.join(distPath, 'sitemap.xml');
+    fs.writeFileSync(distSitemapPath, xml);
+    console.log(`Written sitemap to ${distSitemapPath}`);
 
-    const sitemapPath = path.join(distPath, 'sitemap.xml');
-    fs.writeFileSync(sitemapPath, xml);
+    // Also write to public/ (for dev server and as a fresh fallback)
+    const publicSitemapPath = path.resolve(__dirname, '../public/sitemap.xml');
+    fs.writeFileSync(publicSitemapPath, xml);
+    console.log(`Written sitemap to ${publicSitemapPath}`);
 
-    console.log(`Successfully generated sitemap with ${staticRoutes.length + (products?.length || 0)} URLs at ${sitemapPath}`);
+    console.log(`Successfully generated sitemap with ${totalUrls} URLs.`);
   } catch (err) {
     console.error("Error generating sitemap:", err);
     process.exit(1);
