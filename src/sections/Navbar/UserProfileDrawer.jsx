@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { fetchProducts } from '../../backend/products';
@@ -28,12 +29,24 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
     }
   }, [isOpen, popularProducts.length]);
 
+  // Scroll lock when drawer is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const handleLoginClick = () => {
     onClose();
     navigate('/login');
   };
 
-  return (
+  const drawerJSX = (
     <>
       <div className={`drawer-backdrop ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
       
@@ -63,7 +76,7 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
           <div className="drawer-auth-intro">
             <h2>{user ? `WELCOME BACK` : `SIGN IN TO YOUR ACCOUNT`}</h2>
             <p className="drawer-rewards-text">
-              {user ? `Logged in as ${user.email}` : `Get access to your rewards, referrals, and more.`}
+               {user ? `Logged in as ${user.email}` : `Get access to your rewards, referrals, and more.`}
             </p>
           </div>
           
@@ -110,6 +123,8 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
       </div>
     </>
   );
+
+  return createPortal(drawerJSX, document.body);
 };
 
 export default UserProfileDrawer;

@@ -200,6 +200,21 @@ const CheckoutPage = () => {
         throw new Error('This coupon has already been used.');
       }
 
+      // Check if current user has already used this coupon
+      if (user) {
+        const { data: usageData, error: usageError } = await supabase
+          .from('coupon_usages')
+          .select('id')
+          .eq('coupon_id', data.id)
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (usageError) throw usageError;
+        if (usageData) {
+          throw new Error('You have already used this coupon once.');
+        }
+      }
+
       setAppliedDiscount({ 
         id: data.id,
         code: data.code, 
@@ -217,13 +232,17 @@ const CheckoutPage = () => {
     }
   };
 
-  const markCouponAsUsed = async () => {
-    if (appliedDiscount && appliedDiscount.id) {
+  const markCouponAsUsed = async (orderId) => {
+    if (appliedDiscount && appliedDiscount.id && user) {
       try {
-        await supabase
-          .from('coupons')
-          .update({ used: true })
-          .eq('id', appliedDiscount.id);
+        const { error } = await supabase
+          .from('coupon_usages')
+          .insert({
+            coupon_id: appliedDiscount.id,
+            user_id: user.id,
+            order_id: orderId || null
+          });
+        if (error) throw error;
       } catch (err) {
         console.error("Failed to mark coupon as used:", err);
       }
@@ -246,7 +265,7 @@ const CheckoutPage = () => {
 
       if (paymentMethod === 'COD') {
         const order = await saveOrder('COD', null, null, 'confirmed');
-        await markCouponAsUsed();
+        await markCouponAsUsed(order.id);
         await finalizeOrderFulfillment(order);
       } else {
         // Razorpay flow
@@ -292,7 +311,7 @@ const CheckoutPage = () => {
         // Step 4: Update order to 'paid' in Supabase
         await updateOrderToPaid(pendingOrder.id, paymentResult.razorpay_payment_id);
         
-        await markCouponAsUsed();
+        await markCouponAsUsed(pendingOrder.id);
 
         // Re-fetch updated order to pass to success page
         const { data: updatedOrder } = await supabase.from('orders').select('*').eq('id', pendingOrder.id).single();

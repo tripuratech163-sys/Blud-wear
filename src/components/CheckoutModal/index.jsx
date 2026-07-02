@@ -169,6 +169,21 @@ const CheckoutModal = ({ isOpen, onClose }) => {
       if (error || !data) throw new Error('Invalid coupon code.');
       if (data.used) throw new Error('This coupon has already been used.');
 
+      // Check if current user has already used this coupon
+      if (user) {
+        const { data: usageData, error: usageError } = await supabase
+          .from('coupon_usages')
+          .select('id')
+          .eq('coupon_id', data.id)
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (usageError) throw usageError;
+        if (usageData) {
+          throw new Error('You have already used this coupon once.');
+        }
+      }
+
       setAppliedDiscount({ 
         id: data.id, code: data.code, type: data.discount_type, value: Number(data.discount_value) 
       });
@@ -181,10 +196,15 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const markCouponAsUsed = async () => {
-    if (appliedDiscount && appliedDiscount.id) {
+  const markCouponAsUsed = async (orderId) => {
+    if (appliedDiscount && appliedDiscount.id && user) {
       try {
-        await supabase.from('coupons').update({ used: true }).eq('id', appliedDiscount.id);
+        const { error } = await supabase.from('coupon_usages').insert({
+          coupon_id: appliedDiscount.id,
+          user_id: user.id,
+          order_id: orderId || null
+        });
+        if (error) throw error;
       } catch (err) {
         console.error("Failed to mark coupon as used:", err);
       }
@@ -288,8 +308,6 @@ const CheckoutModal = ({ isOpen, onClose }) => {
 
       // Step 4: Save order to Supabase after successful payment
       await saveOrder(method === 'upi' ? 'UPI' : method === 'card' ? 'Card' : 'Netbanking', paymentResult.razorpay_payment_id, paymentResult.razorpay_order_id);
-      
-      await markCouponAsUsed();
 
     } catch (err) {
       if (err.message === 'Payment cancelled by user') {
@@ -307,7 +325,6 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     setProcessing(true);
     try {
       await saveOrder('COD', null, null);
-      await markCouponAsUsed();
     } catch (err) {
       setCheckoutError(err.message || "Order failed. Please try again.");
       setProcessing(false);
@@ -356,6 +373,9 @@ const CheckoutModal = ({ isOpen, onClose }) => {
       .insert(orderItemsPayload);
 
     if (itemsError) throw itemsError;
+
+    // Mark coupon as used
+    await markCouponAsUsed(savedOrder.id);
 
     // Deduct stock in inventory
     try {

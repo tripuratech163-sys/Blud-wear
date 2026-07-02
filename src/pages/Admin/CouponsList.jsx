@@ -10,6 +10,7 @@ const CouponsList = () => {
   const [code, setCode] = useState('');
   const [discountType, setDiscountType] = useState('percent');
   const [discountValue, setDiscountValue] = useState('');
+  const [maxUses, setMaxUses] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -45,6 +46,9 @@ const CouponsList = () => {
       if (!discountValue || isNaN(discountValue) || Number(discountValue) <= 0) {
         throw new Error("Valid discount value is required");
       }
+      if (!maxUses || isNaN(maxUses) || Number(maxUses) <= 0) {
+        throw new Error("Valid maximum uses is required");
+      }
 
       const { data, error: insertError } = await supabase
         .from('coupons')
@@ -52,6 +56,8 @@ const CouponsList = () => {
           code: codeUpper,
           discount_type: discountType,
           discount_value: Number(discountValue),
+          max_uses: Number(maxUses),
+          uses_count: 0,
           used: false
         }])
         .select()
@@ -68,6 +74,7 @@ const CouponsList = () => {
       // Reset form
       setCode('');
       setDiscountValue('');
+      setMaxUses(1);
     } catch (err) {
       console.error("Create coupon error:", err);
       setError(err.message || "Failed to create coupon.");
@@ -134,6 +141,18 @@ const CouponsList = () => {
               required 
             />
           </div>
+          <div style={{ flex: '1', minWidth: '150px' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontSize: '0.85rem', color: '#aaa' }}>Max Uses</label>
+            <input 
+              type="number" 
+              value={maxUses} 
+              onChange={(e) => setMaxUses(e.target.value)} 
+              placeholder="e.g. 1" 
+              min="1"
+              style={{ width: '100%', padding: '0.75rem', background: '#222', border: '1px solid #333', color: '#fff', borderRadius: '4px' }}
+              required 
+            />
+          </div>
           <button 
             type="submit" 
             disabled={isSubmitting}
@@ -154,6 +173,7 @@ const CouponsList = () => {
                 <th style={{ padding: '1rem' }}>Code</th>
                 <th style={{ padding: '1rem' }}>Type</th>
                 <th style={{ padding: '1rem' }}>Value</th>
+                <th style={{ padding: '1rem' }}>Uses</th>
                 <th style={{ padding: '1rem' }}>Status</th>
                 <th style={{ padding: '1rem' }}>Created At</th>
                 <th style={{ padding: '1rem', textAlign: 'right' }}>Actions</th>
@@ -162,7 +182,7 @@ const CouponsList = () => {
             <tbody>
               {coupons.length === 0 ? (
                 <tr>
-                  <td colSpan="6" style={{ padding: '2rem', textAlign: 'center', color: '#888' }}>
+                  <td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#888' }}>
                     No coupons found. Create one above!
                   </td>
                 </tr>
@@ -174,11 +194,14 @@ const CouponsList = () => {
                     <td style={{ padding: '1rem' }}>
                       {coupon.discount_type === 'percent' ? `${coupon.discount_value}%` : `₹${coupon.discount_value}`}
                     </td>
+                    <td style={{ padding: '1rem', color: '#fff' }}>
+                      {coupon.uses_count || 0} / {coupon.max_uses || 1}
+                    </td>
                     <td style={{ padding: '1rem' }}>
-                      {coupon.used ? (
-                        <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(255, 59, 48, 0.2)', color: '#ff3b30', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>Used</span>
+                      {(coupon.uses_count || 0) >= (coupon.max_uses || 1) ? (
+                        <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(255, 59, 48, 0.2)', color: '#ff3b30', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>Fully Used</span>
                       ) : (
-                        <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(46, 204, 113, 0.2)', color: '#2ecc71', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>Available</span>
+                        <span style={{ padding: '0.25rem 0.5rem', background: 'rgba(46, 204, 113, 0.2)', color: '#2ecc71', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 'bold' }}>Available ({(coupon.max_uses || 1) - (coupon.uses_count || 0)} left)</span>
                       )}
                     </td>
                     <td style={{ padding: '1rem', color: '#888', fontSize: '0.9rem' }}>
