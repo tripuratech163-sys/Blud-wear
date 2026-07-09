@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Navbar from '../../sections/Navbar';
 import Footer from '../../sections/Footer';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import './LoginPage.css';
 
 const LoginPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isLogin, setIsLogin] = useState(location.pathname === '/signup' ? false : true);
   const [authMethod, setAuthMethod] = useState('email'); // Default to email for now
 
   const [email, setEmail] = useState('');
@@ -20,7 +21,18 @@ const LoginPage = () => {
   const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  const navigate = useNavigate();
+
+  // Sync state with URL pathname
+  useEffect(() => {
+    setIsLogin(location.pathname === '/signup' ? false : true);
+  }, [location.pathname]);
+
+  const handleTabClick = (loginMode) => {
+    setIsLogin(loginMode);
+    setError(null);
+    setSuccess(null);
+    navigate(loginMode ? '/login' : '/signup', { replace: true });
+  };
 
   // Redirect if already logged in
   if (user) {
@@ -133,13 +145,13 @@ const LoginPage = () => {
               <div className="auth-tabs">
                 <button
                   className={`auth-tab ${isLogin ? 'active' : ''}`}
-                  onClick={() => { setIsLogin(true); setError(null); setSuccess(null); setOtpSent(false); }}
+                  onClick={() => handleTabClick(true)}
                 >
                   Login
                 </button>
                 <button
                   className={`auth-tab ${!isLogin ? 'active' : ''}`}
-                  onClick={() => { setIsLogin(false); setError(null); setSuccess(null); setOtpSent(false); }}
+                  onClick={() => handleTabClick(false)}
                 >
                   Sign Up
                 </button>
@@ -249,7 +261,7 @@ const LoginPage = () => {
                   <button
                     type="button"
                     className="toggle-auth-btn"
-                    onClick={() => { setIsLogin(!isLogin); setError(null); setSuccess(null); }}
+                    onClick={() => handleTabClick(!isLogin)}
                   >
                     {isLogin ? 'Sign Up' : 'Log In'}
                   </button>

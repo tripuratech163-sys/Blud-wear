@@ -46,10 +46,15 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
     navigate('/login');
   };
 
+  const handleSignupClick = () => {
+    onClose();
+    navigate('/signup');
+  };
+
   const drawerJSX = (
     <>
       <div className={`drawer-backdrop ${isOpen ? 'open' : ''}`} onClick={onClose}></div>
-      
+
       <div className={`profile-drawer ${isOpen ? 'open' : ''}`}>
         <div className="drawer-header">
           <div className="drawer-logo">
@@ -62,7 +67,7 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
             </svg>
           </button>
         </div>
-        
+
         <div className="drawer-content">
           {/* Mobile Category Navigation links */}
           <div className="drawer-nav-links">
@@ -76,10 +81,10 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
           <div className="drawer-auth-intro">
             <h2>{user ? `WELCOME BACK` : `SIGN IN TO YOUR ACCOUNT`}</h2>
             <p className="drawer-rewards-text">
-               {user ? `Logged in as ${user.email}` : `Get access to your rewards, referrals, and more.`}
+              {user ? `Logged in as ${user.email}` : `Get access to your rewards, referrals, and more.`}
             </p>
           </div>
-          
+
           <div className="auth-buttons">
             {user ? (
               <>
@@ -90,12 +95,12 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
               </>
             ) : (
               <>
-                <button className="drawer-btn primary-btn" onClick={handleLoginClick}>SIGN IN OR SIGN UP</button>
-                <button className="drawer-btn shop-btn">SIGN IN WITH <strong>Shop</strong></button>
+                <button className="drawer-btn primary-btn" onClick={handleLoginClick}>LOGIN</button>
+                <button className="drawer-btn shop-btn" onClick={handleSignupClick}>SIGN UP</button>
               </>
             )}
           </div>
-          
+
           <div className="drawer-links-list">
             <button className="drawer-link" onClick={() => { onClose(); openCart(); }}>Your Cart</button>
             <button className="drawer-link" onClick={() => { onClose(); navigate('/wishlist'); }}>Wishlisted Items</button>
@@ -103,7 +108,7 @@ const UserProfileDrawer = ({ isOpen, onClose }) => {
             <button className="drawer-link" onClick={() => { onClose(); navigate('/orders'); }}>Track My Order</button>
             <button className="drawer-link" onClick={() => { onClose(); navigate('/contact-us'); }}>Contact Us</button>
           </div>
-          
+
           <div className="drawer-section">
             <h3 className="drawer-section-title">POPULAR TODAY</h3>
             <div className="drawer-popular-grid">

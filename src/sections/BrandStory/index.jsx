@@ -19,7 +19,7 @@ const BrandStory = () => {
           <div className="visual-block blood-block"></div>
           <div className="visual-image-wrapper">
             <video
-              src="https://res.cloudinary.com/duobc58vr/video/upload/v1781949242/reel_1_xo8nlt.mp4"
+              src="/brand-story.mp4"
               className="story-image"
               autoPlay
               muted
