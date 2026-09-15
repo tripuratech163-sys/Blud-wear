@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import { getCart } from '../backend/cart';
 import { useAuth } from './AuthContext';
+import { calculateB1G1Discount } from '../utils/offers';
 
 const CartContext = createContext({});
 
@@ -36,6 +37,9 @@ export const CartProvider = ({ children }) => {
     fetchCartItems();
   }, [user]);
 
+  // Compute B1G1 offer info dynamically
+  const b1g1Info = useMemo(() => calculateB1G1Discount(cartItems), [cartItems]);
+
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
@@ -55,6 +59,7 @@ export const CartProvider = ({ children }) => {
     cartItems,
     cartCount,
     cartLoading,
+    b1g1Info,
     refreshCart: fetchCartItems
   };
 

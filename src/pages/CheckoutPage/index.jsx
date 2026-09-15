@@ -12,7 +12,7 @@ import './CheckoutPage.css';
 
 const CheckoutPage = () => {
   const { user } = useAuth();
-  const { cartItems, refreshCart, cartLoading } = useCart();
+  const { cartItems, refreshCart, cartLoading, b1g1Info } = useCart();
   const navigate = useNavigate();
 
   // Auth States for inline login
@@ -158,11 +158,14 @@ const CheckoutPage = () => {
     return acc + (priceNum * item.quantity);
   }, 0);
 
-  const discountAmount = activeDiscount 
+  const couponDiscountAmount = activeDiscount 
     ? activeDiscount.type === 'percent' 
       ? basePrice * (activeDiscount.value / 100) 
       : activeDiscount.value
     : 0;
+
+  const b1g1DiscountAmount = b1g1Info?.b1g1Discount || 0;
+  const discountAmount = couponDiscountAmount + b1g1DiscountAmount;
 
   const discountedBasePrice = Math.max(0, basePrice - discountAmount);
   const gstAmount = 0;
@@ -587,10 +590,16 @@ const CheckoutPage = () => {
                         <span>Base Price</span>
                         <span>₹{basePrice.toFixed(2)}</span>
                       </div>
+                      {b1g1DiscountAmount > 0 && (
+                        <div className="summary-line discount-line" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                          <span>Buy ₹799 Get ₹599 Free Offer</span>
+                          <span>-₹{b1g1DiscountAmount.toFixed(2)}</span>
+                        </div>
+                      )}
                       {activeDiscount && (
                         <div className="summary-line discount-line" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
-                          <span>Discount ({activeDiscount.code})</span>
-                          <span>-₹{discountAmount.toFixed(2)}</span>
+                          <span>Coupon Discount ({activeDiscount.code})</span>
+                          <span>-₹{couponDiscountAmount.toFixed(2)}</span>
                         </div>
                       )}
 
@@ -758,10 +767,16 @@ const CheckoutPage = () => {
                   <span>Base Price</span>
                   <span>₹{basePrice.toFixed(2)}</span>
                 </div>
+                {b1g1DiscountAmount > 0 && (
+                  <div className="summary-line discount-line" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                    <span>B1G1 Offer (Get ₹599 Free)</span>
+                    <span>-₹{b1g1DiscountAmount.toFixed(2)}</span>
+                  </div>
+                )}
                 {activeDiscount && (
                   <div className="summary-line discount-line" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
-                    <span>Discount ({activeDiscount.code})</span>
-                    <span>-₹{discountAmount.toFixed(2)}</span>
+                    <span>Coupon ({activeDiscount.code})</span>
+                    <span>-₹{couponDiscountAmount.toFixed(2)}</span>
                   </div>
                 )}
 

@@ -22,6 +22,7 @@ import Navbar from './sections/Navbar';
 import Hero from './sections/Hero';
 import MarqueeBanner from './sections/MarqueeBanner';
 import FeaturedProducts from './sections/FeaturedProducts';
+import FlashSaleAdBanner from './sections/FlashSaleAdBanner';
 import PremiumOutfits from './sections/PremiumOutfits';
 import BrandStory from './sections/BrandStory';
 import NewsletterSection from './sections/NewsletterSection';
@@ -55,6 +56,7 @@ const HomePage = () => (
       <Hero />
       <MarqueeBanner />
       <FeaturedProducts />
+      <FlashSaleAdBanner />
       <VideoGallery />
       <PremiumOutfits />
       <BrandStory />

@@ -1,38 +1,32 @@
 .hero {
   position: relative;
-  min-height: 72vh; /* Adjusted to fit under navbar and show next fold */
-  display: flex;
-  align-items: center;
+  width: 100%;
+  display: block;
   overflow: hidden;
 }
 
-.hero-background {
-  position: absolute;
-  top: 0;
-  left: 0;
+.hero-link {
+  display: block;
   width: 100%;
-  height: 100%;
+}
+
+.hero-background {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: auto;
 }
 
 .hero-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  filter: contrast(1.1) brightness(0.8);
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: contrast(1.05) brightness(1);
 }
 
 .hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    rgba(5, 5, 5, 0.4) 0%,
-    rgba(5, 5, 5, 0.8) 100%
-  );
+  display: none;
 }
 
 .hero-content {
@@ -98,9 +92,6 @@
 }
 
 @media (max-width: 768px) {
-  .hero {
-    min-height: 70vh; /* Even shorter on mobile so the fold is visible */
-  }
   .hero-content {
     padding-top: 40px;
     text-align: center;

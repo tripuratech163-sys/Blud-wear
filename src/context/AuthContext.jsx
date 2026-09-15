@@ -37,18 +37,25 @@ export const AuthProvider = ({ children }) => {
     }
 
     // Check active sessions and sets the user
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      const currentUser = session?.user ?? null;
-      setUser(currentUser);
-      await checkAdminStatus(currentUser);
-      setLoading(false);
-    });
+    supabase.auth.getSession()
+      .then(async ({ data: { session } }) => {
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        await checkAdminStatus(currentUser);
+      })
+      .catch((err) => {
+        console.error('Error fetching session:', err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
 
     // Listen for changes on auth state (sign in, sign out, etc.)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
       await checkAdminStatus(currentUser);
+      setLoading(false);
     });
 
     return () => subscription.unsubscribe();
@@ -64,7 +71,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

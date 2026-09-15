@@ -1,26 +1,22 @@
+import { Link } from 'react-router-dom';
 import './Hero.css';
 
-const Hero = () => {
+const Hero = ({ 
+  desktopSrc = "https://res.cloudinary.com/duobc58vr/image/upload/v1789493555/ChatGPT_Image_Sep_15_2026_11_02_24_PM_yjzygd.png",
+  mobileSrc = "https://res.cloudinary.com/duobc58vr/image/upload/v1789494379/ChatGPT_Image_Sep_15_2026_11_16_08_PM_wn2e3y.png"
+}) => {
   return (
     <section className="hero">
-      <div className="hero-background">
-        <img src="/hero.png" alt="BludWear Luxury Athlete" className="hero-image" />
-        <div className="hero-overlay"></div>
-      </div>
-      
-      <div className="container hero-content">
-        <h1 className="hero-title">
-          <span className="hero-title-line">Forged in</span>
-          <span className="hero-title-line highlight">Blud & Sweat</span>
-        </h1>
-        <p className="hero-subtitle">
-          Uncompromising luxury athleisure for the modern warrior.
-        </p>
-        <div className="hero-actions">
-          <a href="#collection" className="btn btn-primary">ACQUIRE GEAR</a>
-          <a href="#about" className="btn btn-outline">THE BLUDLINE</a>
-        </div>
-      </div>
+      <Link to="/collection" className="hero-link" aria-label="Explore Sale Collection">
+        <picture className="hero-background">
+          {mobileSrc && <source media="(max-width: 768px)" srcSet={mobileSrc} />}
+          <img 
+            src={desktopSrc} 
+            alt="BludWear Sale 16-18 Sep" 
+            className="hero-image" 
+          />
+        </picture>
+      </Link>
     </section>
   );
 };

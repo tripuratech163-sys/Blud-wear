@@ -349,28 +349,83 @@ const ProductPage = () => {
     
     const schemaData = {
       "@context": "https://schema.org/",
-      "@type": "Product",
-      "name": product.name,
-      "image": getProductImages(product),
-      "description": product.description || '',
-      "sku": product.id,
-      "brand": {
-        "@type": "Brand",
-        "name": "BludWear"
-      },
-      "offers": {
-        "@type": "Offer",
-        "url": window.location.href,
-        "priceCurrency": "INR",
-        "price": cleanPrice,
-        "itemCondition": "https://schema.org/NewCondition",
-        "availability": isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock"
-      },
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": ratingValue,
-        "reviewCount": ratingCount
-      }
+      "@graph": [
+        {
+          "@type": "Product",
+          "@id": `${window.location.href}#product`,
+          "name": product.name,
+          "image": getProductImages(product),
+          "description": product.description || '',
+          "sku": product.id,
+          "brand": {
+            "@type": "Brand",
+            "name": "BludWear"
+          },
+          "offers": {
+            "@type": "Offer",
+            "url": window.location.href,
+            "priceCurrency": "INR",
+            "price": cleanPrice,
+            "itemCondition": "https://schema.org/NewCondition",
+            "availability": isOutOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+            "seller": {
+              "@type": "Organization",
+              "name": "BludWear"
+            },
+            "hasMerchantReturnPolicy": {
+              "@type": "MerchantReturnPolicy",
+              "applicableCountry": "IN",
+              "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+              "merchantReturnDays": 14,
+              "returnMethod": "https://schema.org/ReturnByMail"
+            },
+            "shippingDetails": {
+              "@type": "OfferShippingDetails",
+              "shippingRate": {
+                "@type": "MonetaryAmount",
+                "value": "0.00",
+                "currency": "INR"
+              },
+              "shippingDestination": {
+                "@type": "DefinedRegion",
+                "addressCountry": "IN"
+              },
+              "deliveryTime": {
+                "@type": "ShippingDeliveryTime",
+                "handlingTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 0,
+                  "maxValue": 1,
+                  "unitCode": "DAY"
+                },
+                "transitTime": {
+                  "@type": "QuantitativeValue",
+                  "minValue": 2,
+                  "maxValue": 4,
+                  "unitCode": "DAY"
+                }
+              }
+            }
+          },
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": ratingValue,
+            "reviewCount": ratingCount
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": `${window.location.href}#faq`,
+          "mainEntity": faqs.map(f => ({
+            "@type": "Question",
+            "name": f.q,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": f.a
+            }
+          }))
+        }
+      ]
     };
     schemaScript.textContent = JSON.stringify(schemaData);
 

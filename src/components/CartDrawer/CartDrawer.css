@@ -263,3 +263,113 @@
 .btn-checkout:hover {
   background-color: #6a0000;
 }
+
+/* ── B1G1 Offer Styles ── */
+.b1g1-alert-bar {
+  padding: 0.85rem 1.25rem;
+  font-size: 0.8rem;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.b1g1-alert-bar.missing {
+  background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(211, 84, 0, 0.15) 100%);
+  border-left: 3px solid #f39c12;
+}
+
+.b1g1-alert-bar.active {
+  background: linear-gradient(135deg, rgba(192, 57, 43, 0.15) 0%, rgba(169, 50, 38, 0.15) 100%);
+  border-left: 3px solid #c0392b;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.b1g1-alert-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.b1g1-alert-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.b1g1-alert-bar strong {
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.b1g1-alert-bar p {
+  margin: 0.2rem 0 0;
+  color: #ddd;
+}
+
+.btn-b1g1-claim {
+  align-self: flex-start;
+  padding: 0.4rem 0.85rem;
+  background-color: #f39c12;
+  color: #000;
+  border: none;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn-b1g1-claim:hover {
+  background-color: #e67e22;
+  transform: translateY(-1px);
+}
+
+.free-offer-tag {
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 2px 6px;
+  background-color: #ff3b30;
+  color: #fff;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.discounted-item {
+  background-color: rgba(255, 59, 48, 0.05);
+  border-left: 2px solid #ff3b30;
+  padding-left: 0.5rem;
+  border-radius: 0 4px 4px 0;
+}
+
+.free-price-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.strikethrough-price {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.free-label {
+  font-weight: 900;
+  color: #ff3b30;
+  font-size: 0.95rem;
+}
+
+.cart-discount-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #ff3b30;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+

@@ -1,31 +1,37 @@
-# BludWear
+# BludWear — Brand & Product Knowledge File
 
-Uncompromising luxury athleisure and streetwear for the dedicated. Forged in blud and sweat. BludWear is an elite apparel brand specializing in high-performance garments designed to support deep movement, high-intensity workouts, and modern street aesthetics.
+Uncompromising luxury athleisure and heavyweight streetwear engineered for high performance, deep movement, and modern urban aesthetics. Forged in blood and sweat.
 
-## Site Navigation
-- **Homepage**: `/` - Brand manifesto, featured new arrivals, video campaign galleries.
-- **Collection**: `/collection` - Filterable catalog of Men's and Women's gear.
-- **About Us**: `/about` - Our origin story, fabric engineering, and customer testimonials.
-- **Sustainability**: `/sustainability` - Our 2026 eco-commitments including organic fibers, ethical factories, carbon offsets, and plastic-free shipping.
-- **Expert Guides**: `/guides` - Educational articles on choosing technical training gear.
-- **Contact Us**: `/contact-us` - Customer support channels.
+## Active Promotions & Offers
+- **Buy ₹799+ Get ₹599 Free (B1G1 Offer)**: Purchasing any item priced ₹799 or more qualifies the customer for a FREE ₹599 garment in their cart. Discount applies automatically at checkout.
+- **Free Pan-India Shipping**: Free shipping on all orders over ₹999 across India.
+- **Kit Bundles**: Buying matching Top + Bottom outfit sets grants an automatic 15% bundle discount.
 
-## Core Product Categories & Specifications
-- **Compression**: High-waisted performance leggings and tops made with advanced compression fibers (reinforced flatlock stitching, moisture-wicking).
-- **Bottoms**: Elite training shorts, track bottoms, and joggers.
-- **Tops**: Premium training tees, sweat-wicking tanks, and cropped fleece hoodies.
-- **GSM Weight**: Selected garments use heavyweight fabrics (240 GSM to 400 GSM) for a substantial, luxury feel and structure.
+## Core Product Categories & Technical Specifications
+- **Heavyweight Streetwear**: Oversized t-shirts and fleece hoodies crafted from 240 GSM to 400 GSM heavy combed cotton.
+- **Compression Performance Wear**: Muscle-stabilizing leggings, tights, and tops with reinforced flatlock stitching and quick-dry moisture-wicking technology.
+- **Bottoms**: Elite athletic shorts, drop-crotch track bottoms, and tapered performance joggers.
+- **Tops & Outerwear**: Drop-shoulder athletic tees, training tanks, and heavy fleece hoodies.
 
 ## Sizing & Fit Guidelines
-We design apparel with a form-fitting athletic silhouette.
-- **Compression items**: Run snug to provide active muscle support. If a customer prefers a relaxed fit, advise them to size up.
-- **Tops & Hoodies**: True to size with a tailored drop-shoulder fit.
-- **Sizing Tables**:
-  - **Men**: S (36-38" chest), M (38-40" chest), L (40-42" chest), XL (42-44" chest).
-  - **Women**: S (32-34" bust, size 2-4), M (34-36" bust, size 6-8), L (36-38" bust, size 10-12), XL (38-40" bust, size 14).
+- **Compression Gear**: Form-fitting athletic compression designed for muscle support. Size up for a relaxed fit.
+- **Streetwear Tees & Hoodies**: True-to-size drop-shoulder athletic silhouette.
+- **Men's Chest Sizes**: S (36-38"), M (38-40"), L (40-42"), XL (42-44"), XXL (44-46").
+- **Women's Bust Sizes**: S (32-34", UK 6-8), M (34-36", UK 10-12), L (36-38", UK 14), XL (38-40", UK 16).
 
-## Customer Policies & Support
-- **Shipping**: Free nationwide shipping on all domestic orders in India. Dispatch occurs within 24 hours of order confirmation.
-- **Returns**: Easy returns and exchanges filed within 14 days of delivery. Returns can be initiated directly from the "My Orders" profile page.
-- **Payments**: 100% encrypted, secure checkouts via UPI, Credit/Debit cards, and Cash on Delivery (COD).
-- **Contact**: For order queries, email hello@bludwear.com or visit our Contact page.
+## Customer Policies & Operations
+- **Geo-Service Area**: Servicing all states and pin codes across India with live Shiprocket express shipping.
+- **Dispatch**: Fast 24-hour dispatch with automated tracking link generation.
+- **Returns & Exchanges**: 14-day hassle-free return and exchange policy initiated directly from the user orders portal.
+- **Payment Options**: Instant UPI / QR code payments, Credit/Debit cards, Netbanking, and Cash on Delivery (COD).
+- **Official Contact**: Customer support email at wearblud@gmail.com and live inquiry form at `/contact-us`.
+
+## Site Structure
+- **Homepage**: `/`
+- **Catalog**: `/collection`
+- **Product Detail**: `/products/:slug`
+- **Order History**: `/orders`
+- **About Us**: `/about`
+- **Sustainability**: `/sustainability`
+- **Style & Size Guides**: `/guides`
+- **Contact Support**: `/contact-us`

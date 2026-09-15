@@ -1,0 +1,146 @@
+.promo-grid-ad {
+  padding: 4rem 0;
+  background-color: var(--color-bg-primary);
+}
+
+.promo-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.promo-ad-card {
+  position: relative;
+  min-height: 420px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.promo-ad-card:hover {
+  transform: translateY(-4px);
+  border-color: #444;
+}
+
+.promo-card-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.6s ease;
+}
+
+.promo-ad-card:hover .promo-card-bg {
+  transform: scale(1.05);
+}
+
+.promo-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.promo-card-content {
+  position: relative;
+  z-index: 2;
+  padding: 2.5rem 2rem;
+}
+
+.promo-card-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  padding: 0.35rem 0.85rem;
+  background-color: var(--color-blood-main);
+  color: #fff;
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.promo-card-badge.gold {
+  background-color: #f39c12;
+  color: #000;
+}
+
+.promo-card-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0 0 1rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.promo-code-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px dashed #f39c12;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #ddd;
+}
+
+.code-text {
+  font-size: 1.1rem;
+  color: #f39c12;
+  letter-spacing: 2px;
+}
+
+.promo-card-desc {
+  font-size: 0.9rem;
+  color: #ccc;
+  line-height: 1.5;
+  margin: 0 0 1.5rem;
+}
+
+.promo-card-btn {
+  display: inline-block;
+  padding: 0.9rem 1.8rem;
+  background-color: #fff;
+  color: #000;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+  border-radius: 2px;
+}
+
+.promo-card-btn:hover {
+  background-color: var(--color-blood-main);
+  color: #fff;
+}
+
+.promo-card-btn.gold-btn {
+  background-color: #f39c12;
+  color: #000;
+}
+
+.promo-card-btn.gold-btn:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+@media (max-width: 768px) {
+  .promo-grid-ad {
+    padding: 2.5rem 0;
+  }
+  .promo-ad-card {
+    min-height: 360px;
+  }
+  .promo-card-title {
+    font-size: 1.35rem;
+  }
+}
