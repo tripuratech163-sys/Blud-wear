@@ -10,7 +10,7 @@ import './CheckoutModal.css';
 
 const CheckoutModal = ({ isOpen, onClose }) => {
   const { user } = useAuth();
-  const { cartItems, refreshCart } = useCart();
+  const { cartItems, refreshCart, b1g1Info } = useCart();
   const navigate = useNavigate();
 
   // Modal Step: 1 = Auth, 2 = Address, 3 = Payment
@@ -138,11 +138,14 @@ const CheckoutModal = ({ isOpen, onClose }) => {
     return acc + (priceNum * item.quantity);
   }, 0);
 
-  const discountAmount = activeDiscount 
+  const couponDiscountAmount = activeDiscount 
     ? activeDiscount.type === 'percent' 
       ? basePrice * (activeDiscount.value / 100) 
       : activeDiscount.value
     : 0;
+
+  const b1g1DiscountAmount = b1g1Info?.b1g1Discount || 0;
+  const discountAmount = couponDiscountAmount + b1g1DiscountAmount;
 
   const discountedBasePrice = Math.max(0, basePrice - discountAmount);
   const gstAmount = 0;
@@ -443,10 +446,16 @@ const CheckoutModal = ({ isOpen, onClose }) => {
                 <span>Item Total (MRP)</span>
                 <span>₹{basePrice.toFixed(2)}</span>
               </div>
-              {activeDiscount && (
+              {b1g1DiscountAmount > 0 && (
                 <div className="c-price-row" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
-                  <span>Discount ({activeDiscount.code})</span>
-                  <span>-₹{discountAmount.toFixed(2)}</span>
+                  <span>B1G1 Offer (Get Free Item)</span>
+                  <span>-₹{b1g1DiscountAmount.toFixed(2)}</span>
+                </div>
+              )}
+              {couponDiscountAmount > 0 && activeDiscount && (
+                <div className="c-price-row" style={{ color: '#2ecc71', fontWeight: 'bold' }}>
+                  <span>Coupon Discount ({activeDiscount.code})</span>
+                  <span>-₹{couponDiscountAmount.toFixed(2)}</span>
                 </div>
               )}
 
